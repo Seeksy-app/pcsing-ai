@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/AdSlot";
 import { AskAboutBase } from "@/components/AskAboutBase";
+import { BaseServicesDirectory } from "@/components/BaseServicesDirectory";
+import { BaseMap } from "@/components/BaseMap";
 
 export const dynamic = "force-dynamic";
 
@@ -58,18 +60,6 @@ export default async function BasePage({ params }: Props) {
     .order("category")
     .order("sort_order");
 
-  // Group resources by category
-  const grouped = (resources || []).reduce(
-    (acc: Record<string, typeof resources>, r) => {
-      if (!r) return acc;
-      const cat = r.category || "other";
-      if (!acc[cat]) acc[cat] = [];
-      acc[cat]!.push(r);
-      return acc;
-    },
-    {}
-  );
-
   // Fetch local (off-base) resources
   const { data: localResources } = await supabase
     .from("base_local_resources")
@@ -89,11 +79,22 @@ export default async function BasePage({ params }: Props) {
     {}
   );
 
-  const mapQuery = encodeURIComponent(
-    base.address
-      ? `${base.name}, ${base.address}`
-      : `${base.name}, ${base.city}, ${base.state}`
-  );
+  // Fetch all bases for the "directions from" dropdown
+  const { data: allBasesRaw } = await supabase
+    .from("bases")
+    .select("id, name, slug, lat, lng")
+    .neq("slug", slug)
+    .order("name");
+
+  const allBases = (allBasesRaw || []).map((b) => ({
+    id: b.id,
+    name: b.name,
+    slug: b.slug,
+    lat: b.lat,
+    lng: b.lng,
+  }));
+
+  const mapsApiKey = process.env.GOOGLE_PLACES_API_KEY || "";
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
@@ -121,7 +122,7 @@ export default async function BasePage({ params }: Props) {
           </span>
         </div>
         <p className="text-lg text-gray-600">
-          {base.city}, {base.state}
+          {base.city}, {base.state_full || base.state}
         </p>
       </div>
 
@@ -130,19 +131,16 @@ export default async function BasePage({ params }: Props) {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-10">
           {/* Map Embed */}
-          <section>
-            <div className="rounded-xl overflow-hidden border">
-              <iframe
-                title={`Map of ${base.name}`}
-                width="100%"
-                height="350"
-                style={{ border: 0 }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
-              />
-            </div>
-          </section>
+          <BaseMap
+            baseName={base.name}
+            lat={base.lat}
+            lng={base.lng}
+            city={base.city}
+            state={base.state}
+            address={base.address}
+            apiKey={mapsApiKey}
+            allBases={allBases}
+          />
 
           {/* Overview */}
           <section>
@@ -158,7 +156,7 @@ export default async function BasePage({ params }: Props) {
               <div className="bg-gray-50 rounded-lg p-6 text-gray-600">
                 <p>
                   {base.name} is a {base.branch} installation located in{" "}
-                  {base.city}, {base.state}. This page will be updated with
+                  {base.city}, {base.state_full || base.state}. This page will be updated with
                   detailed information about the base, including mission,
                   history, and key facilities.
                 </p>
@@ -189,7 +187,7 @@ export default async function BasePage({ params }: Props) {
                   the {base.city} area.
                 </p>
                 <p>
-                  BAH rates for the {base.city}, {base.state} area vary by pay
+                  BAH rates for the {base.city}, {base.state_full || base.state} area vary by pay
                   grade and dependency status. Check the{" "}
                   <Link href="/entitlements" className="text-blue-600 hover:underline">
                     Entitlements page
@@ -203,69 +201,15 @@ export default async function BasePage({ params }: Props) {
           {/* Ad between sections */}
           <AdSlot zone="base-content" className="py-2" />
 
-          {/* Base Resources */}
+          {/* Base Services Directory */}
           <section>
             <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
               <svg className="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
-              Installation Resources
+              Base Services Directory
             </h2>
-            {Object.keys(grouped).length > 0 ? (
-              <div className="space-y-5">
-                {Object.entries(grouped).map(([category, items]) => (
-                  <div key={category}>
-                    <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-2">
-                      {category.replace(/-/g, " ")}
-                    </h3>
-                    {items?.map((resource) => (
-                      <div
-                        key={resource.id}
-                        className="bg-white border rounded-lg p-4 mb-2"
-                      >
-                        <div className="font-medium">{resource.name}</div>
-                        {resource.description && (
-                          <p className="text-sm text-gray-500 mt-1">{resource.description}</p>
-                        )}
-                        {resource.phone && (
-                          <p className="text-sm text-gray-600 mt-1">
-                            <a href={`tel:${resource.phone}`} className="text-blue-600">
-                              {resource.phone}
-                            </a>
-                          </p>
-                        )}
-                        {resource.address && (
-                          <p className="text-sm text-gray-500">{resource.address}</p>
-                        )}
-                        {resource.hours && (
-                          <p className="text-sm text-gray-500 mt-1">
-                            <span className="font-medium text-gray-600">Hours:</span> {resource.hours}
-                          </p>
-                        )}
-                        {resource.website && (
-                          <a
-                            href={resource.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm text-blue-600 hover:underline inline-block mt-1"
-                          >
-                            Visit Website &rarr;
-                          </a>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="bg-gray-50 rounded-lg p-6 text-gray-600">
-                <p>
-                  Installation resources at {base.name} include commissary, exchange
-                  (BX/PX/NEX), MWR facilities, fitness centers, and community
-                  services. Detailed resource listings will be added soon.
-                </p>
-              </div>
-            )}
+            <BaseServicesDirectory resources={resources || []} />
           </section>
 
           {/* Schools */}
@@ -323,7 +267,7 @@ export default async function BasePage({ params }: Props) {
             </h2>
             <div className="bg-gray-50 rounded-lg p-6 text-gray-600 space-y-3">
               <p>
-                The {base.city}, {base.state} area has plenty to offer military
+                The {base.city}, {base.state_full || base.state} area has plenty to offer military
                 families — from outdoor recreation and local dining to cultural
                 attractions and family-friendly activities.
               </p>
@@ -414,7 +358,7 @@ export default async function BasePage({ params }: Props) {
               </div>
               <div>
                 <dt className="text-gray-500">State</dt>
-                <dd className="font-medium">{base.state}</dd>
+                <dd className="font-medium">{base.state_full || base.state}</dd>
               </div>
               {base.address && (
                 <div>

@@ -100,6 +100,32 @@ export default function AdminEnrichmentPage() {
     }
   }
 
+  async function enrichServices(slug: string, baseId: string) {
+    setRowStatus((s) => ({ ...s, [baseId]: "enriching" }));
+    setRowMessage((s) => ({ ...s, [baseId]: "" }));
+    try {
+      const res = await fetch(`/api/enrich-services/${slug}`, { method: "POST" });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setRowStatus((s) => ({ ...s, [baseId]: "done" }));
+        setRowMessage((s) => ({
+          ...s,
+          [baseId]: `${data.count} services found (${data.categories?.length || 0} categories)`,
+        }));
+        setResourceCounts((c) => ({ ...c, [baseId]: data.count }));
+      } else {
+        setRowStatus((s) => ({ ...s, [baseId]: "error" }));
+        setRowMessage((s) => ({
+          ...s,
+          [baseId]: data.error || "Unknown error",
+        }));
+      }
+    } catch {
+      setRowStatus((s) => ({ ...s, [baseId]: "error" }));
+      setRowMessage((s) => ({ ...s, [baseId]: "Network error" }));
+    }
+  }
+
   async function enrichLocalBase(slug: string, baseId: string) {
     setRowStatus((s) => ({ ...s, [baseId]: "enriching-local" }));
     setRowMessage((s) => ({ ...s, [baseId]: "" }));
@@ -274,6 +300,18 @@ export default function AdminEnrichmentPage() {
                       className="text-blue-600 hover:text-blue-800 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       Enrich
+                    </button>
+                    <button
+                      onClick={() => enrichServices(base.slug, base.id)}
+                      disabled={
+                        !base.lat ||
+                        !base.lng ||
+                        rowStatus[base.id] === "enriching" ||
+                        rowStatus[base.id] === "enriching-local"
+                      }
+                      className="text-green-600 hover:text-green-800 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      Services
                     </button>
                     <button
                       onClick={() => enrichLocalBase(base.slug, base.id)}

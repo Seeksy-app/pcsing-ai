@@ -4,7 +4,10 @@ export function AskAboutBase({ baseName }: { baseName: string }) {
   function handleClick() {
     window.dispatchEvent(
       new CustomEvent("open-ai-chat", {
-        detail: { prefill: `Tell me about PCSing to ${baseName}` },
+        detail: {
+          prefill: `Tell me about PCSing to ${baseName}`,
+          baseContext: baseName,
+        },
       })
     );
   }

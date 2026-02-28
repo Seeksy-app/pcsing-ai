@@ -8,6 +8,7 @@ type BaseCardProps = {
     branch: string;
     city: string;
     state: string;
+    state_full?: string | null;
     image_url?: string | null;
   };
 };
@@ -44,7 +45,7 @@ export function BaseCard({ base }: BaseCardProps) {
           {base.name}
         </h3>
         <p className="text-sm text-gray-600 mt-1">
-          {base.city}, {base.state}
+          {base.city}, {base.state_full || base.state}
         </p>
         <span
           className={`inline-block text-xs px-2 py-1 rounded-full mt-2 ${branchColors[base.branch] || "bg-gray-100 text-gray-700"}`}

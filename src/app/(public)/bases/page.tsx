@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
-import { BaseCard } from "@/components/BaseCard";
 import { BaseDirectoryFilters } from "@/components/BaseDirectoryFilters";
+import { BaseGrid } from "@/components/BaseGrid";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +31,7 @@ export default async function BasesPage({
 
   let query = supabase
     .from("bases")
-    .select("id, name, slug, branch, city, state, image_url")
+    .select("id, name, slug, branch, city, state, state_full, image_url")
     .order("name");
 
   if (params.branch && params.branch !== "All") {
@@ -72,11 +72,7 @@ export default async function BasesPage({
 
       {/* Base Grid */}
       {bases && bases.length > 0 ? (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {bases.map((base) => (
-            <BaseCard key={base.id} base={base} />
-          ))}
-        </div>
+        <BaseGrid bases={bases} />
       ) : (
         <div className="text-center py-20 text-gray-500">
           <p className="text-lg">No bases found matching your filters.</p>
