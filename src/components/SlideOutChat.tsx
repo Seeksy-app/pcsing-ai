@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import ReactMarkdown from "react-markdown";
+import Link from "next/link";
 
 type Message = {
   role: "user" | "assistant";
@@ -16,6 +18,125 @@ const PROMPT_CHIPS = [
   { emoji: "\u{1F3EB}", text: "Find schools near my base" },
 ];
 
+/** Extract follow-up prompts (lines starting with →) from the end of a message */
+function extractFollowUps(content: string): {
+  body: string;
+  followUps: string[];
+} {
+  const lines = content.split("\n");
+  const followUps: string[] = [];
+
+  // Walk backwards to find → lines at the end
+  let i = lines.length - 1;
+  while (i >= 0) {
+    const trimmed = lines[i].trim();
+    if (trimmed.startsWith("→") || trimmed.startsWith("->")) {
+      followUps.unshift(
+        trimmed.replace(/^(→|->)\s*/, "").trim()
+      );
+      i--;
+    } else if (trimmed === "") {
+      i--;
+    } else {
+      break;
+    }
+  }
+
+  const body = lines
+    .slice(0, i + 1)
+    .join("\n")
+    .trimEnd();
+
+  return { body, followUps };
+}
+
+/** Render markdown for assistant messages with conversational styling */
+function ChatMarkdown({
+  content,
+  onFollowUp,
+}: {
+  content: string;
+  onFollowUp: (text: string) => void;
+}) {
+  const { body, followUps } = extractFollowUps(content);
+
+  return (
+    <>
+      <ReactMarkdown
+        components={{
+          // Render headers as bold text, not giant headings
+          h1: ({ children }) => (
+            <p className="mb-1 font-bold">{children}</p>
+          ),
+          h2: ({ children }) => (
+            <p className="mb-1 font-bold">{children}</p>
+          ),
+          h3: ({ children }) => (
+            <p className="mb-1 font-semibold">{children}</p>
+          ),
+          p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+          strong: ({ children }) => (
+            <strong className="font-semibold">{children}</strong>
+          ),
+          ul: ({ children }) => (
+            <ul className="mb-2 ml-4 list-disc space-y-1">{children}</ul>
+          ),
+          ol: ({ children }) => (
+            <ol className="mb-2 ml-4 list-decimal space-y-1">{children}</ol>
+          ),
+          li: ({ children }) => <li>{children}</li>,
+          a: ({ href, children }) => {
+            // Internal links use Next.js Link
+            if (href?.startsWith("/")) {
+              return (
+                <Link
+                  href={href}
+                  className="font-medium text-blue-600 underline hover:text-blue-800"
+                >
+                  {children}
+                </Link>
+              );
+            }
+            return (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-blue-600 underline hover:text-blue-800"
+              >
+                {children}
+              </a>
+            );
+          },
+          // No code blocks in chat
+          code: ({ children }) => (
+            <code className="rounded bg-gray-200 px-1 text-xs">
+              {children}
+            </code>
+          ),
+        }}
+      >
+        {body}
+      </ReactMarkdown>
+
+      {/* Follow-up prompt buttons */}
+      {followUps.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {followUps.map((text, idx) => (
+            <button
+              key={idx}
+              onClick={() => onFollowUp(text)}
+              className="rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-left text-xs text-blue-700 transition hover:border-blue-300 hover:bg-blue-50"
+            >
+              {text}
+            </button>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
 export function SlideOutChat() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -27,12 +148,10 @@ export function SlideOutChat() {
 
   const hasUserMessages = messages.some((m) => m.role === "user");
 
-  // Auto-scroll on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Auto-grow textarea
   useEffect(() => {
     const el = textareaRef.current;
     if (el) {
@@ -41,7 +160,6 @@ export function SlideOutChat() {
     }
   }, [input]);
 
-  // Lock body scroll when panel is open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -67,7 +185,6 @@ export function SlideOutChat() {
       setMessages(updated);
       setLoading(true);
 
-      // Placeholder for streaming
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       try {
@@ -124,7 +241,6 @@ export function SlideOutChat() {
     [loading, messages, baseContext]
   );
 
-  // Listen for open events from other components
   useEffect(() => {
     function onOpen(e: Event) {
       const detail = (
@@ -297,28 +413,38 @@ export function SlideOutChat() {
               }`}
             >
               <div
-                className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                   msg.role === "user"
                     ? "rounded-br-md bg-blue-700 text-white"
                     : "rounded-bl-md bg-gray-100 text-gray-800"
                 }`}
               >
-                {msg.content}
-                {msg.role === "assistant" && !msg.content && loading && (
-                  <span className="inline-flex gap-1">
-                    <span
-                      className="h-1.5 w-1.5 animate-bounce rounded-full bg-gray-400"
-                      style={{ animationDelay: "0ms" }}
-                    />
-                    <span
-                      className="h-1.5 w-1.5 animate-bounce rounded-full bg-gray-400"
-                      style={{ animationDelay: "150ms" }}
-                    />
-                    <span
-                      className="h-1.5 w-1.5 animate-bounce rounded-full bg-gray-400"
-                      style={{ animationDelay: "300ms" }}
-                    />
-                  </span>
+                {msg.role === "assistant" ? (
+                  <>
+                    {msg.content ? (
+                      <ChatMarkdown
+                        content={msg.content}
+                        onFollowUp={sendMessage}
+                      />
+                    ) : loading ? (
+                      <span className="inline-flex gap-1">
+                        <span
+                          className="h-1.5 w-1.5 animate-bounce rounded-full bg-gray-400"
+                          style={{ animationDelay: "0ms" }}
+                        />
+                        <span
+                          className="h-1.5 w-1.5 animate-bounce rounded-full bg-gray-400"
+                          style={{ animationDelay: "150ms" }}
+                        />
+                        <span
+                          className="h-1.5 w-1.5 animate-bounce rounded-full bg-gray-400"
+                          style={{ animationDelay: "300ms" }}
+                        />
+                      </span>
+                    ) : null}
+                  </>
+                ) : (
+                  <span className="whitespace-pre-wrap">{msg.content}</span>
                 )}
               </div>
             </div>
