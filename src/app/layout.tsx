@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { AIChat } from "@/components/AIChat";
+import { SlideOutChat } from "@/components/SlideOutChat";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,7 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <AIChat />
+        <SlideOutChat />
       </body>
     </html>
   );
