@@ -1,0 +1,6 @@
+-- Add columns for MOS in-depth page data
+ALTER TABLE bases ADD COLUMN IF NOT EXISTS weather_info TEXT;
+ALTER TABLE bases ADD COLUMN IF NOT EXISTS cost_of_living JSONB;
+ALTER TABLE bases ADD COLUMN IF NOT EXISTS special_info TEXT;
+ALTER TABLE bases ADD COLUMN IF NOT EXISTS history TEXT;
+ALTER TABLE bases ADD COLUMN IF NOT EXISTS photos TEXT[] DEFAULT '{}';

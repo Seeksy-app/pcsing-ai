@@ -6,6 +6,7 @@ import { AdSlot } from "@/components/AdSlot";
 import { AskAboutBase } from "@/components/AskAboutBase";
 import { BaseServicesDirectory } from "@/components/BaseServicesDirectory";
 import { BaseMap } from "@/components/BaseMap";
+import { ReadMore } from "@/components/ReadMore";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,15 @@ const branchColors: Record<string, string> = {
   "Marine Corps": "bg-red-100 text-red-800",
   "Coast Guard": "bg-orange-100 text-orange-800",
   "Space Force": "bg-indigo-100 text-indigo-800",
+};
+
+type CostOfLiving = {
+  description?: string;
+  avg_household_income?: string;
+  avg_home_price?: string;
+  avg_rent_1br?: string;
+  avg_rent_2br?: string;
+  avg_rent_3br?: string;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -60,7 +70,6 @@ export default async function BasePage({ params }: Props) {
     .order("category")
     .order("sort_order");
 
-  // Fetch local (off-base) resources
   const { data: localResources } = await supabase
     .from("base_local_resources")
     .select("*")
@@ -79,7 +88,6 @@ export default async function BasePage({ params }: Props) {
     {}
   );
 
-  // Fetch all bases for the "directions from" dropdown
   const { data: allBasesRaw } = await supabase
     .from("bases")
     .select("id, name, slug, lat, lng")
@@ -95,6 +103,13 @@ export default async function BasePage({ params }: Props) {
   }));
 
   const mapsApiKey = process.env.GOOGLE_PLACES_API_KEY || "";
+
+  const col = base.cost_of_living as CostOfLiving | null;
+  const photos = (base.photos as string[] | null) || [];
+  const hasHistory = !!base.history;
+  const fullOverview = [base.description, hasHistory ? base.history : null]
+    .filter(Boolean)
+    .join("\n\n");
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
@@ -126,7 +141,7 @@ export default async function BasePage({ params }: Props) {
         </p>
       </div>
 
-      {/* Two-column layout */}
+      {/* A. HERO — Map + Quick Facts sidebar */}
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-10">
@@ -142,7 +157,18 @@ export default async function BasePage({ params }: Props) {
             allBases={allBases}
           />
 
-          {/* Overview */}
+          {/* B. AD BANNER — Leaderboard */}
+          <AdSlot zone="base-leaderboard" className="py-2" />
+          <div className="hidden [.ad-slot:empty+&]:block">
+            <div className="border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center h-[90px] bg-gray-50">
+              <div className="text-center">
+                <p className="text-sm text-gray-400 font-medium">Advertising Partner</p>
+                <Link href="/advertise" className="text-xs text-blue-500 hover:underline">Contact us</Link>
+              </div>
+            </div>
+          </div>
+
+          {/* C. OVERVIEW (ENHANCED) */}
           <section>
             <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
               <svg className="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -150,8 +176,8 @@ export default async function BasePage({ params }: Props) {
               </svg>
               Overview
             </h2>
-            {base.description ? (
-              <p className="text-gray-700 leading-relaxed">{base.description}</p>
+            {fullOverview ? (
+              <ReadMore text={fullOverview} maxLength={250} />
             ) : (
               <div className="bg-gray-50 rounded-lg p-6 text-gray-600">
                 <p>
@@ -162,9 +188,106 @@ export default async function BasePage({ params }: Props) {
                 </p>
               </div>
             )}
+
+            {/* Weather callout */}
+            {base.weather_info && (
+              <div className="mt-4 bg-sky-50 border border-sky-200 rounded-lg p-4 flex gap-3">
+                <span className="text-2xl shrink-0">&#9728;&#65039;</span>
+                <div>
+                  <h4 className="font-semibold text-sm text-sky-900 mb-1">Weather</h4>
+                  <ReadMore text={base.weather_info} maxLength={150} className="text-sm !text-sky-800" />
+                </div>
+              </div>
+            )}
           </section>
 
-          {/* Housing & BAH */}
+          {/* D. COST OF LIVING */}
+          {col && Object.keys(col).length > 0 && (
+            <section>
+              <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                <svg className="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Cost of Living near {base.name}
+              </h2>
+
+              {col.description && (
+                <p className="text-gray-700 mb-4">{col.description}</p>
+              )}
+
+              <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                {col.avg_household_income && (
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <dt className="text-xs text-gray-500 uppercase tracking-wide">Avg. Household Income</dt>
+                    <dd className="text-xl font-bold text-gray-900 mt-1">{col.avg_household_income}</dd>
+                  </div>
+                )}
+                {col.avg_home_price && (
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <dt className="text-xs text-gray-500 uppercase tracking-wide">Avg. Home Price</dt>
+                    <dd className="text-xl font-bold text-gray-900 mt-1">{col.avg_home_price}</dd>
+                  </div>
+                )}
+              </div>
+
+              {(col.avg_rent_1br || col.avg_rent_2br || col.avg_rent_3br) && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {col.avg_rent_1br && (
+                    <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-center">
+                      <dt className="text-xs text-blue-600 font-medium uppercase">1-Bedroom</dt>
+                      <dd className="text-lg font-bold text-blue-900 mt-1">{col.avg_rent_1br}<span className="text-sm font-normal text-blue-600">/mo</span></dd>
+                    </div>
+                  )}
+                  {col.avg_rent_2br && (
+                    <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-center">
+                      <dt className="text-xs text-blue-600 font-medium uppercase">2-Bedroom</dt>
+                      <dd className="text-lg font-bold text-blue-900 mt-1">{col.avg_rent_2br}<span className="text-sm font-normal text-blue-600">/mo</span></dd>
+                    </div>
+                  )}
+                  {col.avg_rent_3br && (
+                    <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-center">
+                      <dt className="text-xs text-blue-600 font-medium uppercase">3-Bedroom</dt>
+                      <dd className="text-lg font-bold text-blue-900 mt-1">{col.avg_rent_3br}<span className="text-sm font-normal text-blue-600">/mo</span></dd>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <p className="text-xs text-gray-400 mt-3">Data from Military OneSource</p>
+            </section>
+          )}
+
+          {/* E. PHOTO GALLERY */}
+          {photos.length > 0 && (
+            <section>
+              <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+                <svg className="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Photos
+                {photos.length > 3 && (
+                  <span className="text-sm font-normal text-gray-500 ml-auto">
+                    {photos.length} photos
+                  </span>
+                )}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {photos.slice(0, 3).map((src, i) => (
+                  <div key={i} className="aspect-[4/3] rounded-lg overflow-hidden shadow-sm bg-gray-100">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt={`${base.name} photo ${i + 1}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* F. HOUSING & BAH */}
           <section>
             <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
               <svg className="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -196,12 +319,23 @@ export default async function BasePage({ params }: Props) {
                 </p>
               </div>
             )}
+            <div className="mt-3">
+              <Link
+                href="/tools/bah-calculator"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-700 text-white rounded-lg text-sm font-medium hover:bg-blue-800 transition"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                Calculate your BAH
+              </Link>
+            </div>
           </section>
 
           {/* Ad between sections */}
           <AdSlot zone="base-content" className="py-2" />
 
-          {/* Base Services Directory */}
+          {/* G. BASE SERVICES DIRECTORY */}
           <section>
             <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
               <svg className="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -343,7 +477,7 @@ export default async function BasePage({ params }: Props) {
         </div>
 
         {/* Sidebar */}
-        <aside className="space-y-6">
+        <aside className="space-y-6 order-first lg:order-last">
           {/* Quick Facts */}
           <div className="bg-white border rounded-xl p-6 sticky top-24">
             <h3 className="font-semibold text-lg mb-4">Quick Facts</h3>
@@ -397,10 +531,20 @@ export default async function BasePage({ params }: Props) {
 
             {/* Ask about this base */}
             <AskAboutBase baseName={base.name} />
-          </div>
 
-          {/* Sidebar Ad */}
-          <AdSlot zone="base-sidebar" />
+            {/* H. AD SIDEBAR — 300x250 placeholder */}
+            <div className="mt-5">
+              <AdSlot zone="base-sidebar" />
+              <div className="hidden [.ad-slot:empty+&]:block">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center h-[250px] w-full bg-gray-50">
+                  <div className="text-center">
+                    <p className="text-sm text-gray-400 font-medium">Sponsor this base page</p>
+                    <Link href="/advertise" className="text-xs text-blue-500 hover:underline">Learn more</Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </aside>
       </div>
     </div>
