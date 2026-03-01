@@ -21,6 +21,30 @@ const BRANCHES = [
   "Space Force",
 ];
 
+/** Comprehensive state/territory/country code → full name lookup */
+const STATE_NAMES: Record<string, string> = {
+  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
+  CO: "Colorado", CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia",
+  HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana", IA: "Iowa",
+  KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland",
+  MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi",
+  MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire",
+  NJ: "New Jersey", NM: "New Mexico", NY: "New York", NC: "North Carolina",
+  ND: "North Dakota", OH: "Ohio", OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania",
+  RI: "Rhode Island", SC: "South Carolina", SD: "South Dakota", TN: "Tennessee",
+  TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia", WA: "Washington",
+  WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming",
+  DC: "District of Columbia", PR: "Puerto Rico", GU: "Guam",
+  // Overseas
+  JP: "Japan", KR: "South Korea", ES: "Spain",
+};
+
+const OVERSEAS_CODES = new Set(["JP", "KR", "ES"]);
+
+function getStateName(code: string): string {
+  return STATE_NAMES[code] || code;
+}
+
 export default async function BasesPage({
   searchParams,
 }: {
@@ -31,7 +55,7 @@ export default async function BasesPage({
 
   let query = supabase
     .from("bases")
-    .select("id, name, slug, branch, city, state, state_full, image_url")
+    .select("id, name, slug, branch, city, state, state_full, phone, address, population, website")
     .order("name");
 
   if (params.branch && params.branch !== "All") {
@@ -46,21 +70,34 @@ export default async function BasesPage({
 
   const { data: bases } = await query;
 
-  // Get unique states for the filter (full names)
+  // Resolve full state names for all bases
+  const resolvedBases = (bases || []).map((b) => ({
+    ...b,
+    state_full: getStateName(b.state),
+  }));
+
+  // Get unique states for the filter
   const { data: statesData } = await supabase
     .from("bases")
-    .select("state, state_full")
+    .select("state")
     .order("state");
-  const stateMap = new Map<string, string>();
-  (statesData || []).forEach((s: { state: string; state_full?: string }) => {
-    if (!stateMap.has(s.state)) {
-      stateMap.set(s.state, s.state_full || s.state);
-    }
-  });
-  const states = Array.from(stateMap.entries()).map(([state, state_full]) => ({
-    state,
-    state_full,
-  }));
+
+  const uniqueCodes = new Set<string>();
+  (statesData || []).forEach((s: { state: string }) => uniqueCodes.add(s.state));
+
+  const usStates: { state: string; state_full: string }[] = [];
+  const overseasStates: { state: string; state_full: string }[] = [];
+
+  Array.from(uniqueCodes)
+    .sort((a, b) => getStateName(a).localeCompare(getStateName(b)))
+    .forEach((code) => {
+      const entry = { state: code, state_full: getStateName(code) };
+      if (OVERSEAS_CODES.has(code)) {
+        overseasStates.push(entry);
+      } else {
+        usStates.push(entry);
+      }
+    });
 
   // Get all bases for the base dropdown
   const { data: allBasesData } = await supabase
@@ -80,7 +117,8 @@ export default async function BasesPage({
       {/* Search & Filters */}
       <BaseDirectoryFilters
         branches={BRANCHES}
-        states={states}
+        usStates={usStates}
+        overseasStates={overseasStates}
         allBases={allBases}
         currentBranch={params.branch || "All"}
         currentState={params.state || ""}
@@ -88,8 +126,8 @@ export default async function BasesPage({
       />
 
       {/* Base Grid */}
-      {bases && bases.length > 0 ? (
-        <BaseGrid bases={bases} />
+      {resolvedBases.length > 0 ? (
+        <BaseGrid bases={resolvedBases} />
       ) : (
         <div className="text-center py-20 text-gray-500">
           <p className="text-lg">No bases found matching your filters.</p>

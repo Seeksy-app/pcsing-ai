@@ -8,7 +8,8 @@ type BaseOption = { name: string; slug: string; state: string };
 
 type Props = {
   branches: string[];
-  states: StateOption[];
+  usStates: StateOption[];
+  overseasStates: StateOption[];
   allBases: BaseOption[];
   currentBranch: string;
   currentState: string;
@@ -17,7 +18,8 @@ type Props = {
 
 export function BaseDirectoryFilters({
   branches,
-  states,
+  usStates,
+  overseasStates,
   allBases,
   currentBranch,
   currentState,
@@ -61,12 +63,23 @@ export function BaseDirectoryFilters({
           onChange={(e) => router.push(buildUrl({ state: e.target.value }))}
           className="px-3 py-2.5 border rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="">All States</option>
-          {states.map((s) => (
-            <option key={s.state} value={s.state}>
-              {s.state_full}
-            </option>
-          ))}
+          <option value="">All Locations</option>
+          <optgroup label="US States &amp; Territories">
+            {usStates.map((s) => (
+              <option key={s.state} value={s.state}>
+                {s.state_full}
+              </option>
+            ))}
+          </optgroup>
+          {overseasStates.length > 0 && (
+            <optgroup label="Overseas">
+              {overseasStates.map((s) => (
+                <option key={s.state} value={s.state}>
+                  {s.state_full}
+                </option>
+              ))}
+            </optgroup>
+          )}
         </select>
         <select
           value=""

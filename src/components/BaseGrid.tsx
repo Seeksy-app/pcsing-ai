@@ -11,8 +11,11 @@ type Base = {
   branch: string;
   city: string;
   state: string;
-  state_full?: string | null;
-  image_url?: string | null;
+  state_full: string;
+  phone?: string | null;
+  address?: string | null;
+  population?: number | null;
+  website?: string | null;
 };
 
 const branchColors: Record<string, string> = {
@@ -83,10 +86,20 @@ export function BaseGrid({ bases }: { bases: Base[] }) {
                   {base.name}
                 </span>
                 <span className="text-sm text-gray-500 hidden sm:inline flex-shrink-0">
-                  {base.city}, {base.state_full || base.state}
+                  {base.city}, {base.state_full}
                 </span>
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
+                {base.phone && (
+                  <span className="text-xs text-gray-400 hidden md:inline">
+                    {base.phone}
+                  </span>
+                )}
+                {base.population && (
+                  <span className="text-xs text-gray-400 hidden lg:inline">
+                    Pop. {base.population.toLocaleString()}
+                  </span>
+                )}
                 <span
                   className={`text-xs px-2 py-0.5 rounded-full font-medium ${branchColors[base.branch] || "bg-gray-100 text-gray-700"}`}
                 >
