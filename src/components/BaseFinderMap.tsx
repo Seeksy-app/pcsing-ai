@@ -339,7 +339,7 @@ export function BaseFinderMap({ bases }: Props) {
           {/* Chat search bar */}
           <form onSubmit={handleChatSubmit} className="mb-3">
             <div
-              className="flex items-center bg-white rounded-full overflow-hidden max-w-xl mx-auto transition-all duration-200 focus-within:ring-2 focus-within:ring-[#1B2A4A]/15"
+              className="flex items-center bg-white rounded-full overflow-hidden max-w-xl mx-auto transition-all duration-200 focus-within:ring-2 focus-within:ring-slate-800/20"
               style={{
                 border: "1px solid #D1D9E6",
                 boxShadow: "0 1px 3px rgba(27,42,74,0.06)",
