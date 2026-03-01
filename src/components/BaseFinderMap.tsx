@@ -761,7 +761,16 @@ export function BaseFinderMap({ bases }: Props) {
                       )}
                     </div>
 
-                    <div className="mt-5">
+                    <div className="mt-5 space-y-2">
+                      <a
+                        href={`/bases/${selectedBase.slug}`}
+                        className="w-full flex items-center justify-center gap-2 bg-[#1B2A4A] hover:bg-[#243558] text-white py-2.5 rounded-lg font-medium text-sm transition border border-white/10"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                        View Full Base Profile
+                      </a>
                       <button
                         onClick={handleReset}
                         className="w-full bg-white/10 hover:bg-white/15 text-blue-200 py-2.5 rounded-lg font-medium text-sm transition"
