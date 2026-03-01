@@ -81,14 +81,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = useCallback(
     async (email: string, password: string): Promise<string | null> => {
-      const { data, error } = await supabase.auth.signUp({ email, password });
-      if (error) return error.message;
-      if (data.user) {
-        await supabase.from("user_profiles").upsert(
-          { id: data.user.id, email, role: "member" },
-          { onConflict: "id" }
-        );
-      }
+      // Use server-side admin API to create pre-confirmed accounts
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) return data.error || "Signup failed";
+
+      // Auto sign-in after account creation
+      const { error: signInErr } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (signInErr) return signInErr.message;
       return null;
     },
     [supabase]
