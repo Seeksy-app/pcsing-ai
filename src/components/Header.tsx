@@ -45,6 +45,7 @@ export function Header() {
               key={link.href}
               href={link.href}
               className="text-sm text-gray-600 hover:text-blue-700 transition"
+              onClick={() => window.dispatchEvent(new CustomEvent("close-base-panel"))}
             >
               {link.label}
             </Link>
@@ -72,7 +73,7 @@ export function Header() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    onClick={() => setToolsOpen(false)}
+                    onClick={() => { setToolsOpen(false); window.dispatchEvent(new CustomEvent("close-base-panel")); }}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition"
                   >
                     {link.label}
@@ -122,7 +123,7 @@ export function Header() {
               key={link.href}
               href={link.href}
               className="block text-gray-600 hover:text-blue-700 transition"
-              onClick={() => setMenuOpen(false)}
+              onClick={() => { setMenuOpen(false); window.dispatchEvent(new CustomEvent("close-base-panel")); }}
             >
               {link.label}
             </Link>
@@ -136,7 +137,7 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 className="block text-gray-600 hover:text-blue-700 transition py-1"
-                onClick={() => setMenuOpen(false)}
+                onClick={() => { setMenuOpen(false); window.dispatchEvent(new CustomEvent("close-base-panel")); }}
               >
                 {link.label}
               </Link>

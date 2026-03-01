@@ -16,8 +16,9 @@ IMPORTANT: At the end of every response, always include:
    - PCS guide → /guide
    - BAH calculator → /tools/bah-calculator
    - PPM calculator → /tools/ppm-calculator
-   - Base info → /bases/[slug] (use the base's URL slug)
    - Blog → /blog
+
+Do NOT link to individual base pages (/bases/[slug]). Instead, answer base-specific questions directly with the information you have.
 
 Format links naturally like: 'Check out our [BAH Calculator](/tools/bah-calculator) for exact rates.'`;
 

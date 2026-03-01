@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { US_STATE_PATHS } from "@/data/us-state-paths";
 
 type BaseInfo = {
@@ -10,6 +9,10 @@ type BaseInfo = {
   state: string;
   state_full: string;
   branch?: string;
+  city?: string;
+  phone?: string;
+  address?: string;
+  website?: string;
 };
 
 type Props = {
@@ -113,7 +116,6 @@ function MilitarySilhouette() {
 }
 
 export function BaseFinderMap({ bases }: Props) {
-  const router = useRouter();
   const [step, setStep] = useState<Step>("idle");
   const [hoveredState, setHoveredState] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState("");
@@ -277,6 +279,14 @@ export function BaseFinderMap({ bases }: Props) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    function handleClosePanel() {
+      handleReset();
+    }
+    window.addEventListener("close-base-panel", handleClosePanel);
+    return () => window.removeEventListener("close-base-panel", handleClosePanel);
+  }, [handleReset]);
 
   /* ── AI mini-chat panel (reused in form + success steps) ── */
   function AiMiniChat() {
@@ -633,29 +643,70 @@ export function BaseFinderMap({ bases }: Props) {
                 </>
               )}
 
-              {/* Success */}
+              {/* Success / Unlocked */}
               {step === "success" && selectedBase && (
                 <>
-                  <div className="bg-[#1B2A4A] rounded-2xl p-6 text-center shadow-lg border border-white/5">
-                    <div className="mb-3" style={{ color: "#C5A55A" }}>
-                      <svg className="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
+                  <div className="bg-[#1B2A4A] rounded-2xl p-6 shadow-lg border border-white/5">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-8 h-8 rounded-full bg-[#C5A55A]/20 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-[#C5A55A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold text-sm">Check your inbox!</h3>
+                        <p className="text-blue-200/60 text-xs">Your {selectedBase.name} briefing is on the way.</p>
+                      </div>
                     </div>
-                    <h3 className="text-white font-semibold text-lg mb-2">Check your inbox!</h3>
-                    <p className="text-blue-200/70 text-sm mb-5">
-                      We&apos;ll send your {selectedBase.name} PCS briefing shortly.
-                    </p>
-                    <div className="space-y-2">
-                      <button
-                        onClick={() => router.push(`/bases/${selectedBase.slug}`)}
-                        className="w-full text-white py-2.5 rounded-lg font-medium text-sm transition-all duration-200"
-                        style={{ backgroundColor: "#C41E3A" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#a8182f")}
-                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#C41E3A")}
-                      >
-                        View {selectedBase.name} Now
-                      </button>
+
+                    {/* Quick Facts */}
+                    <h4 className="text-white font-semibold text-sm mb-3 flex items-center gap-1.5">
+                      <span style={{ color: "#C5A55A", fontSize: "12px" }}>&#9733;</span>
+                      Quick Facts — {selectedBase.name}
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      {selectedBase.branch && (
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-200/50 w-16 shrink-0">Branch</span>
+                          <span className="text-white">{selectedBase.branch}</span>
+                        </div>
+                      )}
+                      {selectedBase.city && (
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-200/50 w-16 shrink-0">City</span>
+                          <span className="text-white">{selectedBase.city}</span>
+                        </div>
+                      )}
+                      {selectedBase.state_full && (
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-200/50 w-16 shrink-0">State</span>
+                          <span className="text-white">{selectedBase.state_full}</span>
+                        </div>
+                      )}
+                      {selectedBase.phone && (
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-200/50 w-16 shrink-0">Phone</span>
+                          <a href={`tel:${selectedBase.phone}`} className="text-[#C5A55A] hover:text-white transition">{selectedBase.phone}</a>
+                        </div>
+                      )}
+                      {selectedBase.address && (
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-200/50 w-16 shrink-0">Address</span>
+                          <span className="text-white text-xs leading-relaxed">{selectedBase.address}</span>
+                        </div>
+                      )}
+                      {selectedBase.website && (
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-200/50 w-16 shrink-0">Website</span>
+                          <a href={selectedBase.website} target="_blank" rel="noopener noreferrer" className="text-[#C5A55A] hover:text-white transition text-xs flex items-center gap-1">
+                            Official Site
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                          </a>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-5">
                       <button
                         onClick={handleReset}
                         className="w-full bg-white/10 hover:bg-white/15 text-blue-200 py-2.5 rounded-lg font-medium text-sm transition"

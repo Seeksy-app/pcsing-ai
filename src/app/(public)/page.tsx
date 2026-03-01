@@ -15,7 +15,7 @@ export default async function HomePage() {
 
   const { data: allBasesForFinder } = await supabase
     .from("bases")
-    .select("name, slug, state, state_full, branch")
+    .select("name, slug, state, state_full, branch, city, phone, address, website")
     .order("name");
 
   return (
@@ -27,6 +27,10 @@ export default async function HomePage() {
           state: string;
           state_full: string;
           branch: string;
+          city?: string;
+          phone?: string;
+          address?: string;
+          website?: string;
         }[]
       }
     />
