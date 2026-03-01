@@ -55,7 +55,7 @@ function MilitarySilhouette() {
   return (
     <svg
       viewBox="0 0 900 320"
-      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-auto pointer-events-none select-none"
+      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-auto pointer-events-none select-none z-[2]"
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
@@ -73,7 +73,7 @@ function MilitarySilhouette() {
         </filter>
       </defs>
 
-      <g fill="#1B2A4A" opacity="0.18" filter="url(#familyShadow)">
+      <g fill="#1B2A4A" opacity="0.07" filter="url(#familyShadow)">
         {/* Soldier (dad) — walking stance, carrying duffle */}
         <ellipse cx="180" cy="38" rx="19" ry="21" />
         {/* Beret/cap brim */}
@@ -480,9 +480,6 @@ export function BaseFinderMap({ bases }: Props) {
             onMouseMove={handleMouseMove}
           >
             <div className="relative">
-              {/* Military silhouette watermark */}
-              <MilitarySilhouette />
-
               <svg
                 viewBox="0 0 959 593"
                 className="w-full h-auto relative z-[1]"
@@ -518,6 +515,9 @@ export function BaseFinderMap({ bases }: Props) {
                   );
                 })}
               </svg>
+
+              {/* Military silhouette watermark (rendered ON TOP of map with low opacity) */}
+              <MilitarySilhouette />
 
               {/* Overseas button */}
               {overseasBases.length > 0 && (
