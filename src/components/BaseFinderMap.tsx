@@ -86,7 +86,6 @@ export function BaseFinderMap({ bases }: Props) {
     setSelectedState(stateId);
     setSelectedSlug("");
     setStep("bases");
-    // Scroll panel into view on mobile
     setTimeout(() => {
       panelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }, 100);
@@ -122,6 +121,18 @@ export function BaseFinderMap({ bases }: Props) {
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     setTooltipPos({ x: e.clientX, y: e.clientY });
   }, []);
+
+  // Open the AI chat slide-out with base context
+  function openChat(prefill: string) {
+    window.dispatchEvent(
+      new CustomEvent("open-ai-chat", {
+        detail: {
+          prefill,
+          baseContext: selectedBase?.name || "",
+        },
+      })
+    );
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -161,7 +172,6 @@ export function BaseFinderMap({ bases }: Props) {
     }
   }
 
-  // Close tooltip when leaving SVG area
   useEffect(() => {
     function handleScroll() {
       setHoveredState(null);
@@ -171,87 +181,76 @@ export function BaseFinderMap({ bases }: Props) {
   }, []);
 
   return (
-    <section className="bg-[#0B1A2F] py-12 sm:py-16 px-4 sm:px-6 relative overflow-hidden">
-      {/* Subtle background elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-400/5 rounded-full blur-3xl" />
-      </div>
-
+    <section className="bg-[#f8fafc] pt-10 sm:pt-14 pb-12 sm:pb-16 px-4 sm:px-6 relative">
       <div className="relative max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+        <div className="text-center mb-8 sm:mb-10">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             Find Your Next Base
-          </h2>
-          <p className="text-blue-200/70 text-sm sm:text-base">
+          </h1>
+          <p className="text-gray-500 text-sm sm:text-base">
             Click a state to explore military installations
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-6 items-start">
+        <div className="grid lg:grid-cols-5 gap-6 lg:gap-8 items-start">
           {/* Map area — 3 cols */}
           <div className="lg:col-span-3" onMouseMove={handleMouseMove}>
-            {/* SVG Map */}
-            <svg
-              viewBox="0 0 959 593"
-              className="w-full h-auto"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {Object.entries(US_STATE_PATHS).map(([stateId, path]) => {
-                const hasBases = statesWithBases.has(stateId);
-                const isHovered = hoveredState === stateId;
-                const isSelected = selectedState === stateId;
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+              <svg
+                viewBox="0 0 959 593"
+                className="w-full h-auto"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {Object.entries(US_STATE_PATHS).map(([stateId, path]) => {
+                  const hasBases = statesWithBases.has(stateId);
+                  const isHovered = hoveredState === stateId;
+                  const isSelected = selectedState === stateId;
 
-                return (
-                  <path
-                    key={stateId}
-                    d={path}
-                    fill={
-                      isSelected
-                        ? "#3B82F6"
-                        : isHovered && hasBases
-                        ? "#60A5FA"
-                        : hasBases
-                        ? "#1E3A5F"
-                        : "#162337"
-                    }
-                    stroke={
-                      isSelected
-                        ? "#93C5FD"
-                        : isHovered && hasBases
-                        ? "#93C5FD"
-                        : "#2A4A6B"
-                    }
-                    strokeWidth={isSelected || isHovered ? "2" : "1"}
-                    strokeLinejoin="round"
-                    className={hasBases ? "cursor-pointer" : "cursor-default"}
-                    style={{
-                      transition: "fill 0.15s ease, stroke 0.15s ease",
-                    }}
-                    onMouseEnter={() => setHoveredState(stateId)}
-                    onMouseLeave={() => setHoveredState(null)}
-                    onClick={() => handleStateClick(stateId)}
-                  />
-                );
-              })}
-            </svg>
+                  return (
+                    <path
+                      key={stateId}
+                      d={path}
+                      fill={
+                        isSelected
+                          ? "#1e40af"
+                          : isHovered && hasBases
+                          ? "#2563eb"
+                          : hasBases
+                          ? "#e2e8f0"
+                          : "#f1f5f9"
+                      }
+                      stroke="#f8fafc"
+                      strokeWidth="1.5"
+                      strokeLinejoin="round"
+                      className={hasBases ? "cursor-pointer" : "cursor-default"}
+                      style={{
+                        transition: "fill 0.2s ease",
+                      }}
+                      onMouseEnter={() => setHoveredState(stateId)}
+                      onMouseLeave={() => setHoveredState(null)}
+                      onClick={() => handleStateClick(stateId)}
+                    />
+                  );
+                })}
+              </svg>
 
-            {/* Overseas button */}
-            {overseasBases.length > 0 && (
-              <div className="flex justify-center mt-4">
-                <button
-                  onClick={handleOverseasClick}
-                  className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${
-                    selectedState === "OVERSEAS"
-                      ? "bg-blue-500 text-white"
-                      : "bg-white/10 text-blue-200 hover:bg-white/20 hover:text-white"
-                  }`}
-                >
-                  Overseas Bases ({overseasBases.length})
-                </button>
-              </div>
-            )}
+              {/* Overseas button */}
+              {overseasBases.length > 0 && (
+                <div className="flex justify-center mt-4 pt-3 border-t border-gray-100">
+                  <button
+                    onClick={handleOverseasClick}
+                    className={`px-5 py-2 rounded-lg text-sm font-medium transition-all border ${
+                      selectedState === "OVERSEAS"
+                        ? "bg-blue-700 text-white border-blue-700"
+                        : "bg-white text-blue-700 border-blue-200 hover:bg-blue-50 hover:border-blue-400"
+                    }`}
+                  >
+                    Overseas Bases ({overseasBases.length})
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Tooltip */}
             {hoveredState && (
@@ -278,21 +277,21 @@ export function BaseFinderMap({ bases }: Props) {
           </div>
 
           {/* Right panel — 2 cols */}
-          <div ref={panelRef} className="lg:col-span-2">
+          <div ref={panelRef} className="lg:col-span-2 space-y-4">
             {/* Step: Map (initial) */}
             {step === "map" && (
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-                <div className="text-blue-300 mb-3">
+              <div className="bg-[#0f1b3d] rounded-2xl p-6 text-center shadow-lg">
+                <div className="text-blue-400 mb-3">
                   <svg className="w-10 h-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
                 <h3 className="text-white font-semibold text-lg mb-1">Select a State</h3>
-                <p className="text-blue-200/60 text-sm">
-                  Click any highlighted state on the map to see available military bases.
+                <p className="text-blue-200/60 text-sm mb-4">
+                  Click any state on the map to see available military bases.
                 </p>
-                <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="pt-4 border-t border-white/10">
                   <p className="text-blue-200/40 text-xs">
                     {bases.length} bases across {statesWithBases.size} states
                   </p>
@@ -302,7 +301,7 @@ export function BaseFinderMap({ bases }: Props) {
 
             {/* Step: Base selection */}
             {step === "bases" && (
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+              <div className="bg-[#0f1b3d] rounded-2xl p-6 shadow-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-white font-semibold text-lg">
                     {selectedState === "OVERSEAS"
@@ -340,34 +339,35 @@ export function BaseFinderMap({ bases }: Props) {
               </div>
             )}
 
-            {/* Step: Email capture form */}
+            {/* Step: Email capture + AI mini-chat */}
             {step === "form" && selectedBase && (
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-                {/* Selected base pill */}
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-200 px-3 py-1.5 rounded-full text-sm font-medium border border-blue-400/20">
-                    {selectedBase.name}
-                    <button
-                      onClick={handleChangeBase}
-                      className="hover:text-white transition ml-1"
-                      aria-label="Change base"
-                    >
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </span>
-                </div>
+              <>
+                {/* Email capture form */}
+                <div className="bg-[#0f1b3d] rounded-2xl p-6 shadow-lg">
+                  {/* Selected base pill */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-200 px-3 py-1.5 rounded-full text-sm font-medium border border-blue-400/20">
+                      {selectedBase.name}
+                      <button
+                        onClick={handleChangeBase}
+                        className="hover:text-white transition ml-1"
+                        aria-label="Change base"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </span>
+                  </div>
 
-                <h3 className="text-white font-semibold text-lg mb-1">
-                  Get your PCS briefing for {selectedBase.name}
-                </h3>
-                <p className="text-blue-200/60 text-sm mb-5">
-                  We&apos;ll send you everything you need to know.
-                </p>
+                  <h3 className="text-white font-semibold text-lg mb-1">
+                    Get your PCS briefing for {selectedBase.name}
+                  </h3>
+                  <p className="text-blue-200/60 text-sm mb-5">
+                    We&apos;ll send you everything you need to know.
+                  </p>
 
-                <form onSubmit={handleSubmit} className="space-y-3">
-                  <div>
+                  <form onSubmit={handleSubmit} className="space-y-3">
                     <input
                       type="email"
                       value={email}
@@ -376,9 +376,7 @@ export function BaseFinderMap({ bases }: Props) {
                       required
                       className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/15 text-white placeholder-blue-200/40 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
-                  </div>
 
-                  <div>
                     <select
                       value={interest}
                       onChange={(e) => setInterest(e.target.value)}
@@ -392,52 +390,122 @@ export function BaseFinderMap({ bases }: Props) {
                         </option>
                       ))}
                     </select>
+
+                    {error && (
+                      <p className="text-red-400 text-sm">{error}</p>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg font-semibold text-sm transition disabled:opacity-50"
+                    >
+                      {submitting ? "Sending..." : "Send My Briefing"}
+                    </button>
+                  </form>
+                </div>
+
+                {/* AI mini-chat panel */}
+                <div className="bg-[#0f1b3d] rounded-2xl p-6 shadow-lg">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
+                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                      </svg>
+                    </div>
+                    <h4 className="text-white font-semibold text-sm">AI Assistant</h4>
                   </div>
 
-                  {error && (
-                    <p className="text-red-400 text-sm">{error}</p>
-                  )}
+                  <p className="text-blue-200/70 text-sm mb-4">
+                    Ask me anything about {selectedBase.name} &mdash; housing, schools, BAH, local area info.
+                  </p>
 
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg font-semibold text-sm transition disabled:opacity-50"
-                  >
-                    {submitting ? "Sending..." : "Send My Briefing"}
-                  </button>
-                </form>
-              </div>
+                  <div className="space-y-2">
+                    {[
+                      `What's BAH at ${selectedBase.name}?`,
+                      `Best schools near ${selectedBase.name}?`,
+                      `Housing options at ${selectedBase.name}?`,
+                    ].map((prompt) => (
+                      <button
+                        key={prompt}
+                        onClick={() => openChat(prompt)}
+                        className="w-full text-left px-3 py-2.5 rounded-lg bg-white/5 hover:bg-blue-500/15 border border-white/5 hover:border-blue-400/20 text-blue-200/80 hover:text-blue-100 text-sm transition-all flex items-center gap-2"
+                      >
+                        <svg className="w-3.5 h-3.5 text-blue-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
             )}
 
             {/* Step: Success */}
             {step === "success" && selectedBase && (
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-                <div className="text-green-400 mb-3">
-                  <svg className="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+              <>
+                <div className="bg-[#0f1b3d] rounded-2xl p-6 text-center shadow-lg">
+                  <div className="text-green-400 mb-3">
+                    <svg className="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white font-semibold text-lg mb-2">
+                    Check your inbox!
+                  </h3>
+                  <p className="text-blue-200/70 text-sm mb-5">
+                    We&apos;ll send your {selectedBase.name} PCS briefing shortly.
+                  </p>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => router.push(`/bases/${selectedBase.slug}`)}
+                      className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-lg font-medium text-sm transition"
+                    >
+                      View {selectedBase.name} Now
+                    </button>
+                    <button
+                      onClick={handleReset}
+                      className="w-full bg-white/10 hover:bg-white/15 text-blue-200 py-2.5 rounded-lg font-medium text-sm transition"
+                    >
+                      Explore Another Base
+                    </button>
+                  </div>
                 </div>
-                <h3 className="text-white font-semibold text-lg mb-2">
-                  Check your inbox!
-                </h3>
-                <p className="text-blue-200/70 text-sm mb-5">
-                  We&apos;ll send your {selectedBase.name} PCS briefing shortly.
-                </p>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => router.push(`/bases/${selectedBase.slug}`)}
-                    className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-lg font-medium text-sm transition"
-                  >
-                    View {selectedBase.name} Now
-                  </button>
-                  <button
-                    onClick={handleReset}
-                    className="w-full bg-white/10 hover:bg-white/15 text-blue-200 py-2.5 rounded-lg font-medium text-sm transition"
-                  >
-                    Explore Another Base
-                  </button>
+
+                {/* AI panel persists on success too */}
+                <div className="bg-[#0f1b3d] rounded-2xl p-6 shadow-lg">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
+                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                      </svg>
+                    </div>
+                    <h4 className="text-white font-semibold text-sm">AI Assistant</h4>
+                  </div>
+                  <p className="text-blue-200/70 text-sm mb-4">
+                    Have questions about {selectedBase.name}?
+                  </p>
+                  <div className="space-y-2">
+                    {[
+                      `What's BAH at ${selectedBase.name}?`,
+                      `Best schools near ${selectedBase.name}?`,
+                      `Housing options at ${selectedBase.name}?`,
+                    ].map((prompt) => (
+                      <button
+                        key={prompt}
+                        onClick={() => openChat(prompt)}
+                        className="w-full text-left px-3 py-2.5 rounded-lg bg-white/5 hover:bg-blue-500/15 border border-white/5 hover:border-blue-400/20 text-blue-200/80 hover:text-blue-100 text-sm transition-all flex items-center gap-2"
+                      >
+                        <svg className="w-3.5 h-3.5 text-blue-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
         </div>

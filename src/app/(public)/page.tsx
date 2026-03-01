@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { BaseCard } from "@/components/BaseCard";
 import { HomeHero } from "@/components/HomeHero";
 import { BaseFinderMap } from "@/components/BaseFinderMap";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "PCSing.ai | The #1 Military PCS & Base Resource",
@@ -58,12 +59,6 @@ const resources = [
 export default async function HomePage() {
   const supabase = await createClient();
 
-  const { data: featuredBases } = await supabase
-    .from("bases")
-    .select("id, name, slug, branch, city, state, image_url")
-    .order("name")
-    .limit(6);
-
   const { data: allBasesForFinder } = await supabase
     .from("bases")
     .select("name, slug, state, state_full, branch")
@@ -78,35 +73,11 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero */}
-      <HomeHero />
-
-      {/* Base Finder with Map */}
+      {/* Map Hero — primary discovery tool */}
       <BaseFinderMap bases={(allBasesForFinder || []) as { name: string; slug: string; state: string; state_full: string; branch: string }[]} />
 
-      {/* Featured Bases */}
-      {featuredBases && featuredBases.length > 0 && (
-        <section className="py-16 px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">
-                Featured Bases
-              </h2>
-              <Link
-                href="/bases"
-                className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
-              >
-                View all &rarr;
-              </Link>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredBases.map((base) => (
-                <BaseCard key={base.id} base={base} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* AI Chat Hero */}
+      <HomeHero />
 
       {/* PCS Resources */}
       <section className="py-16 px-6 bg-gray-50/70">
