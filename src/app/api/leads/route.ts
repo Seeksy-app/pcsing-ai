@@ -20,17 +20,18 @@ export async function POST(req: NextRequest) {
 
   const supabase = createAdminClient();
 
-  const { error } = await supabase.from("leads").insert({
+  const { error } = await supabase.from("email_captures").insert({
     email,
     base_slug: baseSlug || null,
     base_name: baseName || null,
     state: state || null,
     interest: interest || null,
+    source_page: "homepage",
   });
 
   if (error) {
     return NextResponse.json(
-      { error: "Failed to save lead" },
+      { error: "Failed to save" },
       { status: 500 }
     );
   }

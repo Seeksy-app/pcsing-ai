@@ -66,7 +66,7 @@ export default async function HomePage() {
 
   const { data: allBasesForFinder } = await supabase
     .from("bases")
-    .select("name, slug, state, state_full")
+    .select("name, slug, state, state_full, branch")
     .order("name");
 
   const { data: latestPosts } = await supabase
@@ -82,7 +82,7 @@ export default async function HomePage() {
       <HomeHero />
 
       {/* Base Finder with Map */}
-      <BaseFinderMap bases={(allBasesForFinder || []) as { name: string; slug: string; state: string; state_full: string }[]} />
+      <BaseFinderMap bases={(allBasesForFinder || []) as { name: string; slug: string; state: string; state_full: string; branch: string }[]} />
 
       {/* Featured Bases */}
       {featuredBases && featuredBases.length > 0 && (
