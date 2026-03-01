@@ -10,20 +10,28 @@ async function findPlacePhoto(
 ): Promise<string | null> {
   if (!PLACES_API_KEY) return null;
 
-  // Step 1: Find the place
-  const query = `${name}, ${city}, ${state}`;
-  const findUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(query)}&inputtype=textquery&fields=place_id,photos&key=${PLACES_API_KEY}`;
+  // Try multiple search queries in priority order for front gate images
+  const queries = [
+    `${name} main gate, ${city}, ${state}`,
+    `${name} front gate, ${city}, ${state}`,
+    `${name} military base, ${city}, ${state}`,
+    `${name}, ${city}, ${state}`,
+  ];
 
-  const findRes = await fetch(findUrl);
-  const findData = await findRes.json();
+  for (const query of queries) {
+    const findUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(query)}&inputtype=textquery&fields=place_id,photos&key=${PLACES_API_KEY}`;
 
-  const candidate = findData.candidates?.[0];
-  if (!candidate?.photos?.[0]?.photo_reference) return null;
+    const findRes = await fetch(findUrl);
+    const findData = await findRes.json();
 
-  const photoRef = candidate.photos[0].photo_reference;
+    const candidate = findData.candidates?.[0];
+    if (candidate?.photos?.[0]?.photo_reference) {
+      const photoRef = candidate.photos[0].photo_reference;
+      return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photoRef}&key=${PLACES_API_KEY}`;
+    }
+  }
 
-  // Step 2: Build a photo URL (this redirects to the actual image)
-  return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photoRef}&key=${PLACES_API_KEY}`;
+  return null;
 }
 
 export async function POST(req: NextRequest) {
@@ -35,12 +43,14 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json().catch(() => ({}));
-  const { baseId, slug } = body as { baseId?: string; slug?: string };
+  const { baseId, slug, refetchAll } = body as {
+    baseId?: string;
+    slug?: string;
+    refetchAll?: boolean;
+  };
 
   const supabase = createAdminClient();
 
-  // If a specific base ID or slug is provided, fetch just that one
-  // Otherwise, fetch all bases missing images
   let query = supabase
     .from("bases")
     .select("id, name, city, state, image_url");
@@ -49,11 +59,13 @@ export async function POST(req: NextRequest) {
     query = query.eq("id", baseId);
   } else if (slug) {
     query = query.eq("slug", slug);
-  } else {
+  } else if (!refetchAll) {
     query = query.is("image_url", null);
   }
 
-  const { data: bases, error } = await query.order("name").limit(50);
+  const { data: bases, error } = await query
+    .order("name")
+    .limit(refetchAll ? 500 : 50);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

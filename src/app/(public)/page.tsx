@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { BaseCard } from "@/components/BaseCard";
 import { HomeHero } from "@/components/HomeHero";
+import { BaseFinderMap } from "@/components/BaseFinderMap";
 
 export const metadata: Metadata = {
   title: "PCSing.ai | The #1 Military PCS & Base Resource",
@@ -63,6 +64,11 @@ export default async function HomePage() {
     .order("name")
     .limit(6);
 
+  const { data: allBasesForFinder } = await supabase
+    .from("bases")
+    .select("name, slug, state, state_full")
+    .order("name");
+
   const { data: latestPosts } = await supabase
     .from("blog_posts")
     .select("id, title, slug, excerpt, published_at")
@@ -74,6 +80,9 @@ export default async function HomePage() {
     <div>
       {/* Hero */}
       <HomeHero />
+
+      {/* Base Finder with Map */}
+      <BaseFinderMap bases={(allBasesForFinder || []) as { name: string; slug: string; state: string; state_full: string }[]} />
 
       {/* Featured Bases */}
       {featuredBases && featuredBases.length > 0 && (

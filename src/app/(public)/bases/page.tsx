@@ -46,12 +46,28 @@ export default async function BasesPage({
 
   const { data: bases } = await query;
 
-  // Get unique states for the filter
+  // Get unique states for the filter (full names)
   const { data: statesData } = await supabase
     .from("bases")
-    .select("state")
+    .select("state, state_full")
     .order("state");
-  const states = [...new Set((statesData || []).map((s) => s.state))];
+  const stateMap = new Map<string, string>();
+  (statesData || []).forEach((s: { state: string; state_full?: string }) => {
+    if (!stateMap.has(s.state)) {
+      stateMap.set(s.state, s.state_full || s.state);
+    }
+  });
+  const states = Array.from(stateMap.entries()).map(([state, state_full]) => ({
+    state,
+    state_full,
+  }));
+
+  // Get all bases for the base dropdown
+  const { data: allBasesData } = await supabase
+    .from("bases")
+    .select("name, slug, state")
+    .order("name");
+  const allBases = allBasesData || [];
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
@@ -65,6 +81,7 @@ export default async function BasesPage({
       <BaseDirectoryFilters
         branches={BRANCHES}
         states={states}
+        allBases={allBases}
         currentBranch={params.branch || "All"}
         currentState={params.state || ""}
         currentQuery={params.q || ""}

@@ -3,9 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+type StateOption = { state: string; state_full: string };
+type BaseOption = { name: string; slug: string; state: string };
+
 type Props = {
   branches: string[];
-  states: string[];
+  states: StateOption[];
+  allBases: BaseOption[];
   currentBranch: string;
   currentState: string;
   currentQuery: string;
@@ -14,6 +18,7 @@ type Props = {
 export function BaseDirectoryFilters({
   branches,
   states,
+  allBases,
   currentBranch,
   currentState,
   currentQuery,
@@ -57,11 +62,29 @@ export function BaseDirectoryFilters({
           className="px-3 py-2.5 border rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All States</option>
-          {states.map((state) => (
-            <option key={state} value={state}>
-              {state}
+          {states.map((s) => (
+            <option key={s.state} value={s.state}>
+              {s.state_full}
             </option>
           ))}
+        </select>
+        <select
+          value=""
+          onChange={(e) => {
+            if (e.target.value) {
+              router.push(`/bases/${e.target.value}`);
+            }
+          }}
+          className="px-3 py-2.5 border rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Jump to base...</option>
+          {allBases
+            .filter((b) => !currentState || b.state === currentState)
+            .map((b) => (
+              <option key={b.slug} value={b.slug}>
+                {b.name}
+              </option>
+            ))}
         </select>
         <button
           type="submit"
