@@ -73,7 +73,7 @@ function MilitarySilhouette() {
         </filter>
       </defs>
 
-      <g fill="#1B2A4A" opacity="0.055" filter="url(#familyShadow)">
+      <g fill="#1B2A4A" opacity="0.18" filter="url(#familyShadow)">
         {/* Soldier (dad) — walking stance, carrying duffle */}
         <ellipse cx="180" cy="38" rx="19" ry="21" />
         {/* Beret/cap brim */}
