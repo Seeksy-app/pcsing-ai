@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!base) return { title: "Base Not Found" };
 
   return {
-    title: base.seo_title || `${base.name} PCS Guide | PCSing.ai`,
+    title: base.seo_title || `${base.name} PCS Guide | PCSing.us`,
     description:
       base.seo_description ||
       `Everything you need to know about a ${base.name} PCS move — housing, BAH rates, schools, medical, and local resources.`,

@@ -5,7 +5,7 @@ import { BaseFinderMap } from "@/components/BaseFinderMap";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "PCSing.ai | The #1 Military PCS & Base Resource",
+  title: "PCSing.us | The #1 Military PCS & Base Resource",
   description:
     "Plan your military PCS move with AI-powered guidance, base information, BAH rates, checklists, entitlements, and more. The ultimate resource for service members and military families.",
 };

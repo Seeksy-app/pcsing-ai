@@ -5,7 +5,7 @@ import { PPMCalculator } from "@/components/PPMCalculator";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "PPM/DITY Move Calculator 2026 | PCSing.ai",
+  title: "PPM/DITY Move Calculator 2026 | PCSing.us",
   description:
     "Calculate your estimated PPM (DITY) move payout based on rank, weight, and distance. Free military PCS move calculator with 2026 JTR rates.",
   keywords:

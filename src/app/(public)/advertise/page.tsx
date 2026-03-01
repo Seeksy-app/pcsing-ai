@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Advertise with PCSing.ai — Reach Military Families",
+  title: "Advertise with PCSing.us — Reach Military Families",
   description:
-    "Reach military families during their PCS moves. Advertise your business on PCSing.ai — the #1 AI-powered PCS resource.",
+    "Reach military families during their PCS moves. Advertise your business on PCSing.us — the #1 AI-powered PCS resource.",
 };
 
 export default function AdvertisePage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
-      <h1 className="text-4xl font-bold mb-4">Advertise with PCSing.ai</h1>
+      <h1 className="text-4xl font-bold mb-4">Advertise with PCSing.us</h1>
       <p className="text-gray-600 mb-10 text-lg">
         Reach thousands of military families actively planning their next PCS
         move.
@@ -45,7 +45,7 @@ export default function AdvertisePage() {
           partnership opportunities.
         </p>
         <a
-          href="mailto:ads@pcsing.ai"
+          href="mailto:ads@pcsing.us"
           className="bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-800 transition inline-block"
         >
           Contact Us

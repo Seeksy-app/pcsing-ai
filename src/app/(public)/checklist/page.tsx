@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "PCS Checklist — Interactive Moving Timeline | PCSing.ai",
+  title: "PCS Checklist — Interactive Moving Timeline | PCSing.us",
   description:
     "Your complete PCS checklist. Track every task from receiving orders to settling in at your new duty station.",
 };

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "PCS Entitlements & Benefits — PCSing.ai",
+  title: "PCS Entitlements & Benefits — PCSing.us",
   description:
     "Understand your PCS entitlements: BAH, DLA, MALT, TLE, per diem, and more. Know what you're authorized before your move.",
 };

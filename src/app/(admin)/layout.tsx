@@ -20,7 +20,7 @@ export default function AdminLayout({
       {/* Sidebar */}
       <aside className="w-64 bg-gray-900 text-white p-6 flex-shrink-0">
         <Link href="/admin" className="text-xl font-bold mb-8 block">
-          PCSing.ai Admin
+          PCSing.us Admin
         </Link>
         <nav className="space-y-1">
           {adminNav.map((item) => (

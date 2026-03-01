@@ -5,7 +5,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "PCS Blog — Tips, Guides & Resources | PCSing.ai",
+  title: "PCS Blog — Tips, Guides & Resources | PCSing.us",
   description:
     "Expert advice and tips for military PCS moves, housing, entitlements, and military family life.",
 };

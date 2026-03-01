@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return { title: "Post Not Found" };
 
   return {
-    title: post.seo_title || `${post.title} — PCSing.ai`,
+    title: post.seo_title || `${post.title} — PCSing.us`,
     description: post.seo_description,
     openGraph: post.og_image ? { images: [post.og_image] } : undefined,
   };

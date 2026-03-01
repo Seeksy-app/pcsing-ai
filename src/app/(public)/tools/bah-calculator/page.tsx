@@ -6,7 +6,7 @@ import { BASES } from "@/data/bah-rates-2026";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "BAH Calculator 2026 | Basic Allowance for Housing | PCSing.ai",
+  title: "BAH Calculator 2026 | Basic Allowance for Housing | PCSing.us",
   description:
     "Look up 2026 BAH rates by duty station, pay grade, and dependency status. Free military BAH calculator with side-by-side base comparison.",
   keywords:

@@ -34,7 +34,7 @@ export function Header() {
     <header className="bg-white border-b sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold text-blue-900">
-          PCSing<span className="text-blue-600">.ai</span>
+          PCSing<span className="text-blue-600">.us</span>
         </Link>
 
         {/* Desktop Nav */}

@@ -6,7 +6,7 @@ export function Footer() {
       <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
         <div>
           <h3 className="text-white font-bold text-lg mb-3">
-            PCSing<span className="text-blue-400">.ai</span>
+            PCSing<span className="text-blue-400">.us</span>
           </h3>
           <p className="text-sm">
             AI-powered PCS assistance for military families. Plan smarter moves.
@@ -54,7 +54,7 @@ export function Footer() {
       </div>
 
       <div className="max-w-6xl mx-auto mt-8 pt-8 border-t border-gray-800 text-sm text-center">
-        &copy; {new Date().getFullYear()} PCSing.ai. All rights reserved.
+        &copy; {new Date().getFullYear()} PCSing.us. All rights reserved.
       </div>
     </footer>
   );

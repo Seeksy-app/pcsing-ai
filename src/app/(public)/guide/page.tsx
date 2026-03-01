@@ -4,7 +4,7 @@ import { GuideToc } from "@/components/GuideToc";
 import { AskAIButton } from "@/components/AskAIButton";
 
 export const metadata: Metadata = {
-  title: "Complete PCS Guide 2026 | PCSing.ai",
+  title: "Complete PCS Guide 2026 | PCSing.us",
   description:
     "The complete guide to military PCS moves. Learn about orders, entitlements, BAH, housing, shipping household goods, OCONUS moves, and settling in at your new duty station.",
   keywords:

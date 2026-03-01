@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "PCSing.ai — Your AI-Powered PCS Assistant",
-    template: "%s | PCSing.ai",
+    default: "PCSing.us — Your AI-Powered PCS Assistant",
+    template: "%s | PCSing.us",
   },
   description:
     "Plan your military PCS move with AI-powered guidance, base information, BAH rates, checklists, and more.",
