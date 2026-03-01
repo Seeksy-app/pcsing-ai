@@ -10,12 +10,12 @@ type Message = {
 };
 
 const PROMPT_CHIPS = [
-  { emoji: "\u{1F3E0}", text: "What are my PCS entitlements?" },
-  { emoji: "\u{1F4CB}", text: "Help me build a PCS checklist" },
-  { emoji: "\u{1F4B0}", text: "Calculate my BAH and DLA" },
-  { emoji: "\u{1F5FA}\uFE0F", text: "Tell me about my next base" },
-  { emoji: "\u{1F4E6}", text: "How do I set up a DITY move?" },
-  { emoji: "\u{1F3EB}", text: "Find schools near my base" },
+  { emoji: "\u{1F4B0}", text: "Calculate my BAH" },
+  { emoji: "\u{1F4CB}", text: "PCS checklist" },
+  { emoji: "\u{1F3E0}", text: "PCS entitlements breakdown" },
+  { emoji: "\u{1F4E6}", text: "DITY move steps" },
+  { emoji: "\u{1F3EB}", text: "Schools near base" },
+  { emoji: "\u{1F5FA}\uFE0F", text: "Housing options" },
 ];
 
 /** Extract follow-up prompts (lines starting with →) from the end of a message */
@@ -147,6 +147,7 @@ export function SlideOutChat() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const hasUserMessages = messages.some((m) => m.role === "user");
+  const sendMessageRef = useRef<(text: string) => void>(() => {});
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -240,6 +241,7 @@ export function SlideOutChat() {
     },
     [loading, messages, baseContext]
   );
+  sendMessageRef.current = sendMessage;
 
   useEffect(() => {
     function onOpen(e: Event) {
@@ -249,14 +251,15 @@ export function SlideOutChat() {
       setOpen(true);
       if (detail?.baseContext) setBaseContext(detail.baseContext);
       if (detail?.prefill) {
-        setInput(detail.prefill);
-        setTimeout(() => textareaRef.current?.focus(), 350);
+        // Auto-send the prefill message instead of just putting it in the input
+        setTimeout(() => sendMessageRef.current(detail.prefill!), 400);
       } else {
         setTimeout(() => textareaRef.current?.focus(), 350);
       }
     }
     window.addEventListener("open-ai-chat", onOpen);
     return () => window.removeEventListener("open-ai-chat", onOpen);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
