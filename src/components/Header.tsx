@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 const toolsLinks = [
   { label: "BAH Calculator", href: "/tools/bah-calculator" },
@@ -19,6 +20,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
   const toolsRef = useRef<HTMLDivElement>(null);
+  const { user, profile, loading, signOut } = useAuth();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -29,6 +31,9 @@ export function Header() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const closePanel = () =>
+    window.dispatchEvent(new CustomEvent("close-base-panel"));
 
   return (
     <header className="bg-white border-b sticky top-0 z-50">
@@ -44,7 +49,7 @@ export function Header() {
               key={link.href}
               href={link.href}
               className="text-sm text-gray-600 hover:text-blue-700 transition"
-              onClick={() => window.dispatchEvent(new CustomEvent("close-base-panel"))}
+              onClick={closePanel}
             >
               {link.label}
             </Link>
@@ -63,7 +68,12 @@ export function Header() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
             {toolsOpen && (
@@ -72,7 +82,10 @@ export function Header() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    onClick={() => { setToolsOpen(false); window.dispatchEvent(new CustomEvent("close-base-panel")); }}
+                    onClick={() => {
+                      setToolsOpen(false);
+                      closePanel();
+                    }}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition"
                   >
                     {link.label}
@@ -81,6 +94,49 @@ export function Header() {
               </div>
             )}
           </div>
+
+          {/* Auth */}
+          {!loading && (
+            <>
+              {user ? (
+                <div className="flex items-center gap-4">
+                  <Link
+                    href="/dashboard"
+                    className="text-sm text-gray-600 hover:text-blue-700 transition"
+                    onClick={closePanel}
+                  >
+                    Dashboard
+                  </Link>
+                  {profile?.role === "admin" && (
+                    <Link
+                      href="/admin"
+                      className="text-sm text-gray-600 hover:text-blue-700 transition"
+                      onClick={closePanel}
+                    >
+                      Admin
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => {
+                      signOut();
+                      closePanel();
+                    }}
+                    className="text-sm text-gray-400 hover:text-red-600 transition"
+                  >
+                    Log Out
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  className="text-sm bg-[#1B2A4A] text-white px-4 py-1.5 rounded-lg hover:bg-[#243558] transition"
+                  onClick={closePanel}
+                >
+                  Login
+                </Link>
+              )}
+            </>
+          )}
         </nav>
 
         {/* Mobile Menu Toggle */}
@@ -122,7 +178,10 @@ export function Header() {
               key={link.href}
               href={link.href}
               className="block text-gray-600 hover:text-blue-700 transition"
-              onClick={() => { setMenuOpen(false); window.dispatchEvent(new CustomEvent("close-base-panel")); }}
+              onClick={() => {
+                setMenuOpen(false);
+                closePanel();
+              }}
             >
               {link.label}
             </Link>
@@ -136,12 +195,68 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 className="block text-gray-600 hover:text-blue-700 transition py-1"
-                onClick={() => { setMenuOpen(false); window.dispatchEvent(new CustomEvent("close-base-panel")); }}
+                onClick={() => {
+                  setMenuOpen(false);
+                  closePanel();
+                }}
               >
                 {link.label}
               </Link>
             ))}
           </div>
+
+          {/* Mobile Auth */}
+          {!loading && (
+            <div className="border-t pt-3 mt-3 space-y-2">
+              {user ? (
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="block text-gray-600 hover:text-blue-700 transition"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      closePanel();
+                    }}
+                  >
+                    Dashboard
+                  </Link>
+                  {profile?.role === "admin" && (
+                    <Link
+                      href="/admin"
+                      className="block text-gray-600 hover:text-blue-700 transition"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        closePanel();
+                      }}
+                    >
+                      Admin
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => {
+                      signOut();
+                      setMenuOpen(false);
+                      closePanel();
+                    }}
+                    className="block text-red-500 hover:text-red-700 transition"
+                  >
+                    Log Out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="block text-blue-700 font-medium hover:underline"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    closePanel();
+                  }}
+                >
+                  Login
+                </Link>
+              )}
+            </div>
+          )}
         </nav>
       )}
     </header>
