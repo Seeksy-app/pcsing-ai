@@ -7,6 +7,7 @@ import { AskAboutBase } from "@/components/AskAboutBase";
 import { BaseServicesDirectory } from "@/components/BaseServicesDirectory";
 import { BaseMap } from "@/components/BaseMap";
 import { ReadMore } from "@/components/ReadMore";
+import { SaveBaseButton } from "@/components/SaveBaseButton";
 
 export const dynamic = "force-dynamic";
 
@@ -526,6 +527,10 @@ export default async function BasePage({ params }: Props) {
                 </div>
               )}
             </dl>
+
+            <div className="mt-4">
+              <SaveBaseButton baseSlug={slug} baseName={base.name} />
+            </div>
 
             <hr className="my-5" />
 

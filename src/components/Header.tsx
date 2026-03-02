@@ -10,6 +10,7 @@ const toolsLinks = [
 ];
 
 const navLinks = [
+  { label: "Locate Base", href: "/" },
   { label: "PCS Guide", href: "/guide" },
   { label: "Checklist", href: "/checklist" },
   { label: "Entitlements", href: "/entitlements" },
