@@ -50,126 +50,6 @@ const PROMPT_CHIPS = [
 
 type Step = "idle" | "bases" | "form" | "success";
 
-/* ── Military family moving silhouette SVG with shadow ── */
-function MilitarySilhouette() {
-  return (
-    <svg
-      viewBox="0 0 900 320"
-      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-auto pointer-events-none select-none z-[2]"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        {/* Drop shadow filter */}
-        <filter id="familyShadow" x="-10%" y="-10%" width="130%" height="140%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="6" />
-          <feOffset dx="3" dy="8" />
-          <feComponentTransfer>
-            <feFuncA type="linear" slope="0.12" />
-          </feComponentTransfer>
-          <feMerge>
-            <feMergeNode />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-
-      <g fill="#1B2A4A" opacity="0.07" filter="url(#familyShadow)">
-        {/* Soldier (dad) — walking stance, carrying duffle */}
-        <ellipse cx="180" cy="38" rx="19" ry="21" />
-        {/* Beret/cap brim */}
-        <rect x="168" y="55" width="24" height="6" rx="2" />
-        {/* Torso + legs walking */}
-        <path d="M172 61 L168 125 L155 210 L167 210 L178 140 L182 140 L188 210 L200 210 L196 125 L192 61 Z" />
-        {/* Arms — left carrying duffle, right swinging */}
-        <path d="M168 72 L140 115 L148 120 L172 82" />
-        <path d="M192 72 L218 118 L210 122 L188 82" />
-        {/* Boots */}
-        <rect x="153" y="208" width="16" height="8" rx="3" />
-        <rect x="186" y="208" width="16" height="8" rx="3" />
-        {/* Duffle bag on shoulder */}
-        <ellipse cx="132" cy="98" rx="16" ry="28" transform="rotate(-20 132 98)" />
-        <rect x="124" y="68" width="8" height="10" rx="3" />
-
-        {/* Spouse (mom) — holding child's hand */}
-        <ellipse cx="300" cy="48" rx="16" ry="18" />
-        {/* Hair */}
-        <ellipse cx="300" cy="40" rx="18" ry="14" />
-        {/* Torso + walking legs */}
-        <path d="M290 66 L286 130 L278 210 L290 210 L298 142 L302 142 L308 210 L320 210 L316 130 L312 66 Z" />
-        {/* Arms — right reaching to child, left holding bag */}
-        <path d="M290 74 L268 110 L274 114 L292 82" />
-        <path d="M312 74 L342 105 L336 110 L308 82" />
-        {/* Shoes */}
-        <rect x="277" y="208" width="14" height="7" rx="3" />
-        <rect x="307" y="208" width="14" height="7" rx="3" />
-        {/* Purse / tote bag */}
-        <rect x="256" y="96" width="16" height="22" rx="3" />
-        <path d="M258 96 Q264 84 272 96" fill="none" stroke="#1B2A4A" strokeWidth="2.5" />
-
-        {/* Child 1 — holding mom's hand */}
-        <ellipse cx="380" cy="100" rx="12" ry="14" />
-        <path d="M372 114 L370 155 L366 210 L376 210 L379 160 L381 160 L384 210 L394 210 L390 155 L388 114 Z" />
-        {/* Arms — left reaching to mom */}
-        <path d="M372 120 L348 108" fill="none" stroke="#1B2A4A" strokeWidth="4" strokeLinecap="round" />
-        <path d="M388 120 L398 148 L392 151 L385 128" />
-        <rect x="365" y="208" width="12" height="6" rx="2" />
-        <rect x="383" y="208" width="12" height="6" rx="2" />
-
-        {/* Child 2 (smaller, toddler) — being held by dad or walking */}
-        <ellipse cx="435" cy="118" rx="10" ry="12" />
-        <path d="M429 130 L427 165 L424 210 L432 210 L434 170 L436 170 L438 210 L446 210 L443 165 L441 130 Z" />
-        <path d="M427 136 L418 156 L424 159 L430 142" />
-        <path d="M441 136 L450 154 L444 157 L438 142" />
-        <rect x="423" y="208" width="10" height="5" rx="2" />
-        <rect x="437" y="208" width="10" height="5" rx="2" />
-
-        {/* Dog (family pet) */}
-        <ellipse cx="500" cy="190" rx="22" ry="14" />
-        <ellipse cx="520" cy="178" rx="10" ry="9" />
-        <ellipse cx="526" cy="175" rx="4" ry="6" />
-        <ellipse cx="515" cy="175" rx="4" ry="6" />
-        {/* Tail */}
-        <path d="M478 184 Q470 170 475 162" fill="none" stroke="#1B2A4A" strokeWidth="3.5" strokeLinecap="round" />
-        {/* Legs */}
-        <rect x="488" y="202" width="4" height="14" rx="1.5" />
-        <rect x="496" y="202" width="4" height="14" rx="1.5" />
-        <rect x="506" y="202" width="4" height="14" rx="1.5" />
-        <rect x="513" y="202" width="4" height="14" rx="1.5" />
-
-        {/* Moving boxes stack */}
-        <rect x="600" y="150" width="50" height="40" rx="3" />
-        <rect x="610" y="115" width="40" height="38" rx="3" />
-        <rect x="655" y="165" width="35" height="30" rx="3" />
-        {/* Box tape lines */}
-        <line x1="625" y1="150" x2="625" y2="190" stroke="white" strokeWidth="2" opacity="0.4" />
-        <line x1="630" y1="115" x2="630" y2="153" stroke="white" strokeWidth="2" opacity="0.4" />
-        <line x1="672" y1="165" x2="672" y2="195" stroke="white" strokeWidth="1.5" opacity="0.4" />
-
-        {/* American flag */}
-        <rect x="730" y="30" width="3" height="186" rx="1" />
-        <rect x="733" y="30" width="70" height="44" rx="1" />
-        <rect x="733" y="30" width="28" height="24" />
-        <circle cx="740" cy="37" r="1.3" fill="white" />
-        <circle cx="747" cy="37" r="1.3" fill="white" />
-        <circle cx="754" cy="37" r="1.3" fill="white" />
-        <circle cx="743" cy="43" r="1.3" fill="white" />
-        <circle cx="750" cy="43" r="1.3" fill="white" />
-        <circle cx="740" cy="49" r="1.3" fill="white" />
-        <circle cx="747" cy="49" r="1.3" fill="white" />
-        <circle cx="754" cy="49" r="1.3" fill="white" />
-        <rect x="761" y="33" width="42" height="3.5" fill="white" opacity="0.5" />
-        <rect x="761" y="40" width="42" height="3.5" fill="white" opacity="0.5" />
-        <rect x="761" y="47" width="42" height="3.5" fill="white" opacity="0.5" />
-        <rect x="733" y="57" width="70" height="3.5" fill="white" opacity="0.5" />
-        <rect x="733" y="64" width="70" height="3.5" fill="white" opacity="0.5" />
-
-        {/* Ground line / shadow */}
-        <ellipse cx="400" cy="222" rx="380" ry="6" opacity="0.5" />
-      </g>
-    </svg>
-  );
-}
-
 export function BaseFinderMap({ bases }: Props) {
   const [step, setStep] = useState<Step>("idle");
   const [hoveredState, setHoveredState] = useState<string | null>(null);
@@ -380,11 +260,31 @@ export function BaseFinderMap({ bases }: Props) {
 
   return (
     <section
-      className="relative min-h-[calc(100vh-64px)]"
-      style={{ background: "linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)" }}
+      className="relative min-h-[calc(100vh-64px)] overflow-hidden"
+      style={{
+        backgroundImage: "url('/images/hero-family.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        position: "relative",
+      }}
     >
+      {/* White overlay — sits between hero image and content */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(255, 255, 255, 0.85)",
+          zIndex: 10,
+          pointerEvents: "none",
+        }}
+      />
+
       {/* ── Floating top layer: heading + chat bar + chips ── */}
-      <div className="relative z-10 pt-8 pb-4 px-4 sm:px-6">
+      <div className="relative pt-8 pb-4 px-4 sm:px-6" style={{ position: "relative", zIndex: 20 }}>
         <div className="max-w-3xl mx-auto text-center">
           {/* Brand line */}
           <p
@@ -472,7 +372,7 @@ export function BaseFinderMap({ bases }: Props) {
       </div>
 
       {/* ── Main content: map + panel ── */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pb-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pb-8" style={{ position: "relative", zIndex: 20 }}>
         <div className={`grid ${panelOpen ? "lg:grid-cols-5" : "lg:grid-cols-1"} gap-6 lg:gap-8 items-start transition-all duration-300`}>
           {/* Map (no card border — breathes edge to edge) */}
           <div
@@ -515,9 +415,6 @@ export function BaseFinderMap({ bases }: Props) {
                   );
                 })}
               </svg>
-
-              {/* Military silhouette watermark (rendered ON TOP of map with low opacity) */}
-              <MilitarySilhouette />
 
               {/* Overseas button */}
               {overseasBases.length > 0 && (
