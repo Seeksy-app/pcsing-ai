@@ -269,20 +269,6 @@ export function BaseFinderMap({ bases }: Props) {
         position: "relative",
       }}
     >
-      {/* White overlay — sits between hero image and content */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(255, 255, 255, 0.50)",
-          zIndex: 1,
-          pointerEvents: "none",
-        }}
-      />
-
       {/* ── Floating top layer: heading + chat bar + chips ── */}
       <div className="relative pt-8 pb-4 px-4 sm:px-6" style={{ position: "relative", zIndex: 2 }}>
         <div className="max-w-3xl mx-auto text-center">
@@ -400,8 +386,8 @@ export function BaseFinderMap({ bases }: Props) {
                           : isHovered && hasBases
                           ? "#1B2A4A"
                           : hasBases
-                          ? "#D1D9E6"
-                          : "#EDF0F4"
+                          ? "#4A6FA5"
+                          : "#8FA4C0"
                       }
                       stroke="white"
                       strokeWidth="1.5"
