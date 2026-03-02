@@ -278,13 +278,13 @@ export function BaseFinderMap({ bases }: Props) {
           right: 0,
           bottom: 0,
           backgroundColor: "rgba(255, 255, 255, 0.85)",
-          zIndex: 10,
+          zIndex: 1,
           pointerEvents: "none",
         }}
       />
 
       {/* ── Floating top layer: heading + chat bar + chips ── */}
-      <div className="relative pt-8 pb-4 px-4 sm:px-6" style={{ position: "relative", zIndex: 20 }}>
+      <div className="relative pt-8 pb-4 px-4 sm:px-6" style={{ position: "relative", zIndex: 2 }}>
         <div className="max-w-3xl mx-auto text-center">
           {/* Brand line */}
           <p
@@ -372,7 +372,7 @@ export function BaseFinderMap({ bases }: Props) {
       </div>
 
       {/* ── Main content: map + panel ── */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pb-8" style={{ position: "relative", zIndex: 20 }}>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pb-8" style={{ position: "relative", zIndex: 2 }}>
         <div className={`grid ${panelOpen ? "lg:grid-cols-5" : "lg:grid-cols-1"} gap-6 lg:gap-8 items-start transition-all duration-300`}>
           {/* Map (no card border — breathes edge to edge) */}
           <div
