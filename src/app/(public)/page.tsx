@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { BaseFinderMap } from "@/components/BaseFinderMap";
+import { SavedBasesSection } from "@/components/SavedBasesSection";
 
 export const dynamic = "force-dynamic";
 
@@ -19,20 +20,23 @@ export default async function HomePage() {
     .order("name");
 
   return (
-    <BaseFinderMap
-      bases={
-        (allBasesForFinder || []) as {
-          name: string;
-          slug: string;
-          state: string;
-          state_full: string;
-          branch: string;
-          city?: string;
-          phone?: string;
-          address?: string;
-          website?: string;
-        }[]
-      }
-    />
+    <>
+      <BaseFinderMap
+        bases={
+          (allBasesForFinder || []) as {
+            name: string;
+            slug: string;
+            state: string;
+            state_full: string;
+            branch: string;
+            city?: string;
+            phone?: string;
+            address?: string;
+            website?: string;
+          }[]
+        }
+      />
+      <SavedBasesSection />
+    </>
   );
 }

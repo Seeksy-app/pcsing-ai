@@ -31,7 +31,7 @@ export function SaveBaseButton({ baseSlug, baseName }: Props) {
         .maybeSingle();
       setSaved(!!data);
     } else {
-      const storedEmail = localStorage.getItem("pcsing_email");
+      const storedEmail = localStorage.getItem("pcsing_user_email");
       if (storedEmail) {
         setEmailInput(storedEmail);
         const { data } = await supabase
@@ -73,7 +73,7 @@ export function SaveBaseButton({ baseSlug, baseName }: Props) {
       }
       setSaving(false);
     } else {
-      const storedEmail = localStorage.getItem("pcsing_email");
+      const storedEmail = localStorage.getItem("pcsing_user_email");
       if (storedEmail) {
         await saveWithEmail(storedEmail);
       } else {
@@ -107,7 +107,7 @@ export function SaveBaseButton({ baseSlug, baseName }: Props) {
       setSaved(true);
     }
 
-    localStorage.setItem("pcsing_email", email);
+    localStorage.setItem("pcsing_user_email", email);
     setShowEmailModal(false);
     setSaving(false);
   }

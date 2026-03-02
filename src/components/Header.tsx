@@ -20,8 +20,20 @@ const navLinks = [
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
+  const [hasEmail, setHasEmail] = useState(false);
   const toolsRef = useRef<HTMLDivElement>(null);
   const { user, profile, loading, signOut } = useAuth();
+
+  useEffect(() => {
+    setHasEmail(!!localStorage.getItem("pcsing_user_email"));
+  }, []);
+
+  function clearSession() {
+    localStorage.removeItem("pcsing_user_email");
+    setHasEmail(false);
+    closePanel();
+    window.location.reload();
+  }
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -128,13 +140,23 @@ export function Header() {
                   </button>
                 </div>
               ) : (
-                <Link
-                  href="/login"
-                  className="text-sm bg-[#1B2A4A] text-white px-4 py-1.5 rounded-lg hover:bg-[#243558] transition"
-                  onClick={closePanel}
-                >
-                  Login
-                </Link>
+                <div className="flex items-center gap-4">
+                  {hasEmail && (
+                    <button
+                      onClick={clearSession}
+                      className="text-sm text-gray-400 hover:text-red-600 transition"
+                    >
+                      Clear Session
+                    </button>
+                  )}
+                  <Link
+                    href="/login"
+                    className="text-sm bg-[#1B2A4A] text-white px-4 py-1.5 rounded-lg hover:bg-[#243558] transition"
+                    onClick={closePanel}
+                  >
+                    Login
+                  </Link>
+                </div>
               )}
             </>
           )}
@@ -245,16 +267,29 @@ export function Header() {
                   </button>
                 </>
               ) : (
-                <Link
-                  href="/login"
-                  className="block text-blue-700 font-medium hover:underline"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    closePanel();
-                  }}
-                >
-                  Login
-                </Link>
+                <>
+                  {hasEmail && (
+                    <button
+                      onClick={() => {
+                        setMenuOpen(false);
+                        clearSession();
+                      }}
+                      className="block text-red-500 hover:text-red-700 transition"
+                    >
+                      Clear Session
+                    </button>
+                  )}
+                  <Link
+                    href="/login"
+                    className="block text-blue-700 font-medium hover:underline"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      closePanel();
+                    }}
+                  >
+                    Login
+                  </Link>
+                </>
               )}
             </div>
           )}
