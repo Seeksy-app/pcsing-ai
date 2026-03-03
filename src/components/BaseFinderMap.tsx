@@ -270,11 +270,12 @@ export function BaseFinderMap({ bases }: Props) {
       }}
     >
       {/* ── Frosted glass hero card: heading + chat bar + chips ── */}
-      <div className="relative pt-8 pb-6 px-4 sm:px-6" style={{ position: "relative", zIndex: 2 }}>
+      <div className="relative pt-6 pb-0 px-4 sm:px-6" style={{ position: "relative", zIndex: 2 }}>
         <div
-          className="max-w-2xl mx-auto text-center rounded-2xl px-6 py-8 sm:px-10 sm:py-10"
+          className="mx-auto text-center rounded-2xl px-6 py-7 sm:px-10 sm:py-8"
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.92)",
+            maxWidth: "1100px",
+            backgroundColor: "rgba(255, 255, 255, 0.75)",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
             boxShadow: "0 8px 32px rgba(27, 42, 74, 0.12), 0 1px 3px rgba(0,0,0,0.06)",
@@ -367,16 +368,14 @@ export function BaseFinderMap({ bases }: Props) {
         </div>
       </div>
 
-      {/* ── Map section — reduced dominance ── */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pb-8" style={{ position: "relative", zIndex: 2 }}>
-        <p className="text-center text-sm text-gray-500 mb-3 font-medium">
+      {/* ── Map section ── */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-8" style={{ position: "relative", zIndex: 2 }}>
+        <p className="text-center text-sm text-gray-500 mb-2 font-medium">
           Or click a state to browse bases
         </p>
         <div className={`grid ${panelOpen ? "lg:grid-cols-5" : "lg:grid-cols-1"} gap-6 lg:gap-8 items-start transition-all duration-300`}>
-          {/* Map — slightly reduced opacity */}
           <div
-            className={panelOpen ? "lg:col-span-3" : "lg:col-span-1 max-w-4xl mx-auto w-full"}
-            style={{ opacity: 0.85 }}
+            className={panelOpen ? "lg:col-span-3" : "lg:col-span-1 max-w-6xl mx-auto w-full"}
             onMouseMove={handleMouseMove}
           >
             <div className="relative">
