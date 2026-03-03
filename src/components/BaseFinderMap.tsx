@@ -269,35 +269,44 @@ export function BaseFinderMap({ bases }: Props) {
         position: "relative",
       }}
     >
-      {/* ── Floating top layer: heading + chat bar + chips ── */}
-      <div className="relative pt-8 pb-4 px-4 sm:px-6" style={{ position: "relative", zIndex: 2 }}>
-        <div className="max-w-3xl mx-auto text-center">
-          {/* Brand line */}
-          <p
-            className="text-xs font-semibold mb-2 tracking-[0.1em] uppercase"
-            style={{ color: "#C5A55A" }}
+      {/* ── Frosted glass hero card: heading + chat bar + chips ── */}
+      <div className="relative pt-8 pb-6 px-4 sm:px-6" style={{ position: "relative", zIndex: 2 }}>
+        <div
+          className="max-w-2xl mx-auto text-center rounded-2xl px-6 py-8 sm:px-10 sm:py-10"
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.92)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            boxShadow: "0 8px 32px rgba(27, 42, 74, 0.12), 0 1px 3px rgba(0,0,0,0.06)",
+          }}
+        >
+          {/* Brand badge */}
+          <span
+            className="inline-block text-xs font-semibold tracking-[0.1em] uppercase px-3 py-1 rounded-full mb-4"
+            style={{ backgroundColor: "#1B2A4A", color: "#C5A55A" }}
           >
-            Welcome to PCSing.us
-          </p>
-          <h1 className="text-xl sm:text-2xl font-bold mb-3" style={{ color: "#1B2A4A" }}>
-            Click a state or ask a question to start planning your PCS
-          </h1>
-          {/* Gold divider */}
-          <div className="flex justify-center mb-5">
-            <div className="w-20 h-0.5 rounded-full" style={{ backgroundColor: "#C5A55A" }} />
-          </div>
+            PCSing.us
+          </span>
 
-          {/* Chat search bar */}
-          <form onSubmit={handleChatSubmit} className="mb-3">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: "#1B2A4A" }}>
+            Plan your PCS with AI
+          </h1>
+          <p className="text-sm sm:text-base text-gray-500 mb-6 max-w-lg mx-auto leading-relaxed">
+            Your AI-powered PCS assistant — powered by real base data, BAH rates, and school ratings.
+          </p>
+
+          {/* Chat search bar — larger & more prominent */}
+          <form onSubmit={handleChatSubmit} className="mb-5">
             <div
-              className="flex items-center bg-white rounded-full overflow-hidden max-w-xl mx-auto transition-all duration-200 focus-within:ring-2 focus-within:ring-slate-800/20"
+              className="flex items-center bg-white rounded-2xl overflow-hidden max-w-xl mx-auto transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500/30"
               style={{
-                border: "1px solid #D1D9E6",
-                boxShadow: "0 1px 3px rgba(27,42,74,0.06)",
+                border: "2px solid #D1D9E6",
+                boxShadow: "0 4px 20px rgba(27,42,74,0.10), 0 0 0 1px rgba(27,42,74,0.03)",
+                minHeight: "56px",
               }}
             >
-              <div className="pl-4" style={{ color: "#1B2A4A", opacity: 0.4 }}>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="pl-4" style={{ color: "#1B2A4A", opacity: 0.35 }}>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                 </svg>
               </div>
@@ -308,19 +317,19 @@ export function BaseFinderMap({ bases }: Props) {
                 placeholder={
                   selectedBase
                     ? `Ask about ${selectedBase.name}...`
-                    : "Where are you PCSing to?"
+                    : "Ask me anything about your PCS — housing, schools, BAH, entitlements..."
                 }
-                className="flex-1 px-3 py-3 text-sm focus:outline-none"
-                style={{ color: "#1B2A4A" }}
+                className="flex-1 px-3 py-4 focus:outline-none"
+                style={{ color: "#1B2A4A", fontSize: "16px" }}
               />
               <button
                 type="submit"
-                className="mr-1.5 px-4 py-2 rounded-full font-medium text-xs flex items-center gap-1 shrink-0 text-white transition-colors duration-200"
-                style={{ backgroundColor: "#1B2A4A" }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#C41E3A")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#1B2A4A")}
+                className="mr-2 px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-1.5 shrink-0 text-white transition-colors duration-200"
+                style={{ backgroundColor: "#2563EB" }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#1D4ED8")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#2563EB")}
               >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
                 Ask
@@ -328,25 +337,26 @@ export function BaseFinderMap({ bases }: Props) {
             </div>
           </form>
 
-          {/* Compact prompt chips */}
+          {/* Quick action chips */}
           <div className="flex flex-wrap justify-center gap-2">
             {PROMPT_CHIPS.map((chip) => (
               <button
                 key={chip}
                 onClick={() => openChat(chip)}
-                className="px-3 py-1.5 bg-white rounded-full text-xs transition-all duration-200"
+                className="px-3.5 py-2 rounded-full text-xs font-medium transition-all duration-200"
                 style={{
-                  border: "1px solid #D1D9E6",
+                  backgroundColor: "#F0F4F8",
+                  border: "1px solid #E2E8F0",
                   color: "#1B2A4A",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "#C41E3A";
-                  e.currentTarget.style.backgroundColor = "rgba(196,30,58,0.04)";
-                  e.currentTarget.style.color = "#C41E3A";
+                  e.currentTarget.style.borderColor = "#2563EB";
+                  e.currentTarget.style.backgroundColor = "#EFF6FF";
+                  e.currentTarget.style.color = "#2563EB";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "#D1D9E6";
-                  e.currentTarget.style.backgroundColor = "white";
+                  e.currentTarget.style.borderColor = "#E2E8F0";
+                  e.currentTarget.style.backgroundColor = "#F0F4F8";
                   e.currentTarget.style.color = "#1B2A4A";
                 }}
               >
@@ -357,12 +367,16 @@ export function BaseFinderMap({ bases }: Props) {
         </div>
       </div>
 
-      {/* ── Main content: map + panel ── */}
+      {/* ── Map section — reduced dominance ── */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pb-8" style={{ position: "relative", zIndex: 2 }}>
+        <p className="text-center text-sm text-gray-500 mb-3 font-medium">
+          Or click a state to browse bases
+        </p>
         <div className={`grid ${panelOpen ? "lg:grid-cols-5" : "lg:grid-cols-1"} gap-6 lg:gap-8 items-start transition-all duration-300`}>
-          {/* Map (no card border — breathes edge to edge) */}
+          {/* Map — slightly reduced opacity */}
           <div
-            className={panelOpen ? "lg:col-span-3" : "lg:col-span-1 max-w-5xl mx-auto w-full"}
+            className={panelOpen ? "lg:col-span-3" : "lg:col-span-1 max-w-4xl mx-auto w-full"}
+            style={{ opacity: 0.85 }}
             onMouseMove={handleMouseMove}
           >
             <div className="relative">
