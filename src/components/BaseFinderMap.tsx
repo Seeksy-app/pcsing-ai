@@ -275,25 +275,17 @@ export function BaseFinderMap({ bases }: Props) {
           className="mx-auto text-center rounded-2xl px-6 py-7 sm:px-10 sm:py-8"
           style={{
             maxWidth: "1100px",
-            backgroundColor: "rgba(255, 255, 255, 0.75)",
+            backgroundColor: "rgba(255, 255, 255, 0.45)",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
             boxShadow: "0 8px 32px rgba(27, 42, 74, 0.12), 0 1px 3px rgba(0,0,0,0.06)",
           }}
         >
-          {/* Brand badge */}
-          <span
-            className="inline-block text-xs font-semibold tracking-[0.1em] uppercase px-3 py-1 rounded-full mb-4"
-            style={{ backgroundColor: "#1B2A4A", color: "#C5A55A" }}
-          >
-            PCSing.us
-          </span>
-
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: "#1B2A4A" }}>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-1" style={{ color: "#1B2A4A" }}>
             Plan your PCS with AI
           </h1>
-          <p className="text-sm sm:text-base text-gray-500 mb-6 max-w-lg mx-auto leading-relaxed">
-            Your AI-powered PCS assistant — powered by real base data, BAH rates, and school ratings.
+          <p className="text-xs sm:text-sm text-gray-500 mb-5 font-light">
+            Your AI-powered military relocation assistant.
           </p>
 
           {/* Chat search bar — larger & more prominent */}
@@ -369,7 +361,7 @@ export function BaseFinderMap({ bases }: Props) {
       </div>
 
       {/* ── Map section ── */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-8" style={{ position: "relative", zIndex: 2 }}>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pb-8" style={{ position: "relative", zIndex: 2 }}>
         <p className="text-center text-sm text-gray-500 mb-2 font-medium">
           Or click a state to browse bases
         </p>
