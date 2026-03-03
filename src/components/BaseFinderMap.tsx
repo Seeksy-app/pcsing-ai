@@ -275,7 +275,7 @@ export function BaseFinderMap({ bases }: Props) {
           className="mx-auto text-center rounded-2xl px-6 py-7 sm:px-10 sm:py-8"
           style={{
             maxWidth: "1100px",
-            backgroundColor: "rgba(255, 255, 255, 0.45)",
+            backgroundColor: "rgba(255, 255, 255, 0.15)",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
             boxShadow: "0 8px 32px rgba(27, 42, 74, 0.12), 0 1px 3px rgba(0,0,0,0.06)",
