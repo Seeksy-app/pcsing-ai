@@ -2,6 +2,13 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { BAHCalculator } from "@/components/BAHCalculator";
 import { BASES } from "@/data/bah-rates-2026";
+import { FaqJsonLd } from "@/components/FaqJsonLd";
+
+const bahFaqs = [
+  { question: "How often do BAH rates change?", answer: "BAH rates are updated annually, effective January 1st each year. The Department of Defense surveys housing costs in each military housing area to determine rates." },
+  { question: "Does BAH cover my full rent?", answer: "BAH is designed to cover the median housing cost in your area for your pay grade. In high-cost areas like San Diego or Washington DC, BAH may not fully cover rent. In lower-cost areas, you may pocket the difference." },
+  { question: "Do I lose BAH if I live on base?", answer: "Yes, if you live in on-base privatized housing, your BAH is typically paid directly to the housing management company. You do not receive BAH as cash when living on base." },
+];
 
 export const dynamic = "force-dynamic";
 
@@ -41,5 +48,10 @@ export default async function BAHCalculatorPage() {
     a.label.localeCompare(b.label)
   );
 
-  return <BAHCalculator bases={allBases} />;
+  return (
+    <>
+      <FaqJsonLd questions={bahFaqs} />
+      <BAHCalculator bases={allBases} />
+    </>
+  );
 }

@@ -38,7 +38,7 @@ const faqs = [
 export default function SpouseEmploymentPage() {
   return (
     <>
-      <FaqJsonLd faqs={faqs} />
+      <FaqJsonLd questions={faqs} />
 
       {/* Hero */}
       <section className="bg-gradient-to-b from-blue-50 via-white to-white py-16 px-6">

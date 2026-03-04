@@ -73,7 +73,7 @@ const entitlements = [
 export default function EntitlementsPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
-      <FaqJsonLd faqs={entitlementsFaqs} />
+      <FaqJsonLd questions={entitlementsFaqs} />
       <h1 className="text-4xl font-bold mb-4">PCS Entitlements & Benefits</h1>
       <p className="text-gray-600 mb-10 text-lg">
         Know what you&apos;re authorized before your move. Here are the key PCS

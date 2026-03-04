@@ -2,6 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { GuideToc } from "@/components/GuideToc";
 import { AskAIButton } from "@/components/AskAIButton";
+import { FaqJsonLd } from "@/components/FaqJsonLd";
+
+const guideFaqs = [
+  { question: "What is a PCS move?", answer: "A Permanent Change of Station (PCS) is the official relocation of an active-duty service member and their family from one duty station to another. Most service members PCS every 2-4 years." },
+  { question: "How far in advance should I start planning my PCS?", answer: "Start planning as soon as you receive orders, ideally 90 days out. Visit TMO/PPO immediately, schedule your HHG pickup early (especially during peak season May-August), and request a sponsor at your gaining installation." },
+  { question: "What PCS entitlements am I authorized?", answer: "Service members are authorized BAH, DLA (Dislocation Allowance), MALT (Mileage Allowance), TLE/TLA (Temporary Lodging), per diem, HHG shipment, and advance pay. Amounts vary by rank, location, and family size." },
+  { question: "What is the difference between HHG and PPM/DITY moves?", answer: "An HHG move is government-arranged where the military hires a company to pack and ship your belongings. A PPM (Personally Procured Move, formerly DITY) means you move yourself and get reimbursed based on the government's estimated cost." },
+  { question: "How long does a PCS move take?", answer: "A typical CONUS PCS takes 2-4 weeks of active travel and transition. However, the full process from receiving orders to settling in at your new duty station spans 60-120 days depending on distance and complexity." },
+];
 
 export const metadata: Metadata = {
   title: "Complete PCS Guide 2026 | PCSing.us",
@@ -28,6 +37,7 @@ const tocItems = [
 export default function GuidePage() {
   return (
     <div>
+      <FaqJsonLd questions={guideFaqs} />
       {/* Hero */}
       <section className="bg-gradient-to-b from-blue-50 via-white to-white py-16 px-6">
         <div className="max-w-3xl mx-auto text-center">
