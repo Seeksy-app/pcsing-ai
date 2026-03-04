@@ -297,15 +297,15 @@ function BahResultCard({ data }: { data: NonNullable<Message["bahData"]> }) {
           </p>
         </div>
         <div className="space-y-1.5 rounded-lg bg-white p-3 text-xs">
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-3">
             <span className="text-gray-500">Pay Grade</span>
             <span className="font-semibold text-gray-800">{data.grade}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500">Duty Station</span>
-            <span className="font-semibold text-gray-800">{data.baseName}</span>
+          <div className="flex justify-between gap-3">
+            <span className="shrink-0 text-gray-500">Duty Station</span>
+            <span className="font-semibold text-gray-800 text-right">{data.baseName}</span>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-3">
             <span className="text-gray-500">Dependents</span>
             <span className="font-semibold text-gray-800">
               {data.dependents ? "Yes" : "No"}
@@ -343,8 +343,7 @@ function BahSavePrompt({
         email,
         pay_grade: bahData.grade,
         duty_station: bahData.baseName,
-        base_slug: bahData.slug,
-        dependents: bahData.dependents,
+        with_dependents: bahData.dependents,
         bah_rate: bahData.rate,
       });
     if (insertError) {
