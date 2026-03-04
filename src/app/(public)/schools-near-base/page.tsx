@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "Best Schools Near Military Bases 2026",
   description:
     "Find top-rated schools near military installations. DoDEA, public, and private school options for PCS families.",
+  keywords:
+    "schools near military bases, DoDEA schools, military child education, best schools near base, military family schools, PCS school transfer",
 };
 
 const faqs = [

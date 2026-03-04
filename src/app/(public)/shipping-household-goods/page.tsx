@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "HHG Shipping Guide - Military Household Goods",
   description:
     "Complete guide to shipping household goods during PCS. Weight limits, scheduling TMO, claims, and what not to ship.",
+  keywords:
+    "household goods shipping, HHG military, TMO PCS, military moving weight limits, PCS household goods, military shipping claims",
 };
 
 const faqs = [

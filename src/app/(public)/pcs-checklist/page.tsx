@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "PCS Checklist 2026 - 60-Day Moving Timeline",
   description:
     "Free printable PCS checklist with every task from orders to arrival. Organized by timeline for military families.",
+  keywords:
+    "PCS checklist, military move checklist, PCS moving timeline, military relocation checklist, PCS to-do list, military family moving guide",
 };
 
 const faqs = [

@@ -1,9 +1,19 @@
 import type { Metadata } from "next";
+import { FaqJsonLd } from "@/components/FaqJsonLd";
+
+const entitlementsFaqs = [
+  { question: "What is DLA and how much will I receive?", answer: "DLA (Dislocation Allowance) is a one-time payment to cover miscellaneous PCS expenses like deposits and connection fees. In 2026, DLA rates range from approximately $2,100 for junior enlisted to $3,500+ for senior officers, based on dependency status." },
+  { question: "How is BAH calculated for a PCS move?", answer: "BAH is based on your pay grade, dependency status, and the zip code of your new duty station. Your BAH rate changes to the new location rate on the day you report. Use the PCSing.us BAH calculator to look up your specific rate." },
+  { question: "Can I get advance pay for a PCS?", answer: "Yes, you can request up to 3 months of base pay in advance to cover PCS-related expenses. The advance must be repaid within 12 months through payroll deduction." },
+  { question: "What is MALT and how is it calculated?", answer: "MALT (Mileage Allowance) reimburses you for driving your privately owned vehicle to your new duty station. The rate is calculated using the official Defense Table of Official Distances (DTOD) between your old and new stations." },
+];
 
 export const metadata: Metadata = {
   title: "PCS Entitlements & Benefits — PCSing.us",
   description:
     "Understand your PCS entitlements: BAH, DLA, MALT, TLE, per diem, and more. Know what you're authorized before your move.",
+  keywords:
+    "PCS entitlements, DLA, MALT, TLE, per diem military, PCS benefits, military move allowances, dislocation allowance",
 };
 
 const entitlements = [
@@ -63,6 +73,7 @@ const entitlements = [
 export default function EntitlementsPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
+      <FaqJsonLd faqs={entitlementsFaqs} />
       <h1 className="text-4xl font-bold mb-4">PCS Entitlements & Benefits</h1>
       <p className="text-gray-600 mb-10 text-lg">
         Know what you&apos;re authorized before your move. Here are the key PCS

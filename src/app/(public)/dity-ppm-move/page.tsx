@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "DITY Move Guide 2026 - PPM Payout Tips",
   description:
     "Learn how PPM (DITY) moves work, calculate your payout, and maximize reimbursement. Complete guide with 2026 rates.",
+  keywords:
+    "DITY move, PPM move, personally procured move, military DITY payout, PPM reimbursement, do it yourself military move, PPM calculator",
 };
 
 const faqs = [

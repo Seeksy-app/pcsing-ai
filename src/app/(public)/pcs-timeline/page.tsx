@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "PCS Timeline 2026 - Month-by-Month Guide",
   description:
     "Month-by-month PCS timeline from orders to settling in. Know exactly what to do and when during your military move.",
+  keywords:
+    "PCS timeline, military move timeline, PCS schedule, when to start PCS, military relocation timeline, PCS month by month",
 };
 
 const faqs = [

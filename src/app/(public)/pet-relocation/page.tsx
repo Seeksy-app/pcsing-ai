@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "Pet Relocation During PCS - Complete Guide",
   description:
     "How to PCS with dogs, cats, and pets. CONUS and OCONUS pet travel requirements, quarantine rules, and shipping costs.",
+  keywords:
+    "PCS with pets, military pet relocation, pet quarantine military, OCONUS pet travel, military move with dogs cats, pet shipping PCS",
 };
 
 const faqs = [

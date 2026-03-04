@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
+import { FaqJsonLd } from "@/components/FaqJsonLd";
+
+const checklistFaqs = [
+  { question: "When should I start my PCS checklist?", answer: "Begin your PCS checklist as soon as you receive orders, typically 8 or more weeks before your move date. Early tasks include contacting TMO, requesting a sponsor, and researching housing at your new duty station." },
+  { question: "What should I pack in my PCS go-bag?", answer: "Pack essential documents (orders, IDs, medical records), medications, a change of clothes for each family member, phone chargers, snacks, and comfort items for children. Plan to live out of your go-bags for 3-7 days." },
+  { question: "What is the most important thing to do upon arrival?", answer: "File your travel voucher within 5 business days of arriving at your new duty station. This is how you get reimbursed for MALT, per diem, TLE, and DLA. Late filing can delay payment by weeks." },
+];
 
 export const metadata: Metadata = {
   title: "PCS Checklist — Interactive Moving Timeline | PCSing.us",
   description:
     "Your complete PCS checklist. Track every task from receiving orders to settling in at your new duty station.",
+  keywords:
+    "PCS checklist, military moving checklist, PCS task list, interactive PCS checklist, military move planner, PCS orders checklist",
 };
 
 const checklistSections = [
@@ -74,6 +83,7 @@ const checklistSections = [
 export default function ChecklistPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
+      <FaqJsonLd faqs={checklistFaqs} />
       <h1 className="text-4xl font-bold mb-4">PCS Checklist</h1>
       <p className="text-gray-600 mb-10 text-lg">
         Your comprehensive PCS moving checklist, organized by timeline.

@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "Military Spouse Employment During PCS",
   description:
     "PCS guide for military spouses: career resources, license portability, remote work, SECO, and MyCAA education benefits.",
+  keywords:
+    "military spouse employment, military spouse jobs, MyCAA, SECO, military spouse career, license portability military, remote work military spouse",
 };
 
 const faqs = [

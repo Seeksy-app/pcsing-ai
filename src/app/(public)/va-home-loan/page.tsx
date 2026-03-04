@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "VA Home Loan Guide for Military PCS Moves",
   description:
     "Use your VA home loan benefit during a PCS. Zero down payment, no PMI, and how to buy a home at your new duty station.",
+  keywords:
+    "VA home loan, VA loan PCS, military home buying, VA mortgage, zero down payment military, VA loan eligibility, buy home during PCS",
 };
 
 const faqs = [

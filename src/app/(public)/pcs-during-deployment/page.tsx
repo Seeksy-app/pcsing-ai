@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "PCS During Deployment - Family Guide",
   description:
     "How to handle a PCS when the service member is deployed. Power of attorney, special entitlements, and family tips.",
+  keywords:
+    "PCS during deployment, military deployment PCS, power of attorney PCS, military family move deployed, PCS while deployed",
 };
 
 const faqs = [

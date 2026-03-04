@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "BAH Calculator 2026 - Housing Allowance Rates",
   description:
     "Calculate your 2026 Basic Allowance for Housing by base, rank, and dependency status. Free BAH rate lookup tool.",
+  keywords:
+    "BAH calculator, basic allowance for housing, military housing allowance, BAH rates 2026, military BAH, housing allowance by rank",
 };
 
 const faqs = [

@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "Overseas PCS Guide 2026 - OCONUS Moves",
   description:
     "Everything you need for an OCONUS PCS: passports, command sponsorship, vehicle shipping, pets, and overseas housing.",
+  keywords:
+    "OCONUS PCS, overseas PCS, military overseas move, OCONUS relocation, command sponsorship, overseas military housing, PCS to Germany Japan Korea",
 };
 
 const faqs = [

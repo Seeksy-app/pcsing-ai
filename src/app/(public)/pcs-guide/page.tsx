@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "PCS Move Guide 2026 for Military Families",
   description:
     "Step-by-step guide to military PCS moves in 2026. Orders, entitlements, timelines, housing, and tips for every branch.",
+  keywords:
+    "PCS move, military relocation, PCS guide 2026, permanent change of station, military move tips, PCS orders, military family move",
 };
 
 const faqs = [

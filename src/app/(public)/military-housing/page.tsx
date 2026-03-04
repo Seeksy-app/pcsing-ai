@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "Military Housing Guide - On vs Off Base",
   description:
     "Compare on-base and off-base military housing. BAH rates, privatized housing, renting, and buying near your base.",
+  keywords:
+    "military housing, on base housing, off base housing, privatized military housing, BAH housing, military family housing, base housing",
 };
 
 const faqs = [

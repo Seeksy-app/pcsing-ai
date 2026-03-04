@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "TRICARE During PCS - Coverage Transfer Guide",
   description:
     "Keep TRICARE coverage during your PCS. How to transfer regions, find providers, and handle prescriptions during a move.",
+  keywords:
+    "TRICARE PCS, TRICARE transfer, military health insurance PCS, TRICARE region change, TRICARE during move, military prescriptions PCS",
 };
 
 const faqs = [
